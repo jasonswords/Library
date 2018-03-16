@@ -18,8 +18,7 @@ public class Main {
 		
 		Transaction trans = new Transaction(1, new Book(1, "Black Beauty", "Author", "Adventure", 10), new User(1, "nadine", "Flavin", "013413", "add 1", "add 2","add 3"));
 		
-		
-		
+
 		
 		
 		
