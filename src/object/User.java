@@ -5,17 +5,16 @@ public class User {
 	private int userId;
 	private String firstName;
 	private String surName;
-	private String phone;
 	private String address1;
 	private String address2;
 	private String address3;
+	private String phone;
 
 	public User() {
 		super();
 	}
 
-	public User(int userId, String firstName, String surName, String phone, String address1, String address2,
-			String address3) {
+	public User(int userId, String firstName, String surName, String address1, String address2,String address3,String phone) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;

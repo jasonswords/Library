@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BookReservationTransaction {
+public class BookReservationDatabase {
 	private static String password = "toor";
 	private static String username = "root";
 

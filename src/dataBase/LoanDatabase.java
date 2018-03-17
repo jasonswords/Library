@@ -1,11 +1,12 @@
 package dataBase;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BookTransaction {
+public class LoanDatabase {
 	private static String password = "toor";
 	private static String username = "root";
 
@@ -21,20 +22,17 @@ public class BookTransaction {
 			}
 		}
 		
-		//create the book tale if not already created
-		public static void createTableBook() {
+		public static void createTableLoan() {
 			int i=0;
 			try {
-		String sql = "CREATE TABLE IF NOT EXISTS Book" + 
-				"(" + 
-				"bookId INT AUTO_INCREMENT," + 
-				"bookName varchar(255)," + 
-				"author varchar(255)," + 
-				"genre varchar(255)," + 
-				"numOfCopies INT," + 
-				"PRIMARY KEY(bookId)" + 
-				");";
-		
+		String sql = "CREATE TABLE IF NOT EXISTS Loan" + 
+				"		(" + 
+				"		loanId INT AUTO_INCREMENT," + 
+				"		bookId INT," + 
+				"		userId INT," + 
+				"		date DATE," + 
+				"		PRIMARY KEY (loanId)" + 
+				"		);";
 				PreparedStatement ps = getConnection().prepareStatement(sql);
 				i = ps.executeUpdate();
 			} catch (Exception e) {
@@ -44,20 +42,18 @@ public class BookTransaction {
 			}
 		}
 
-		// method for add book data in database
-		public static int addBook(String bookName, String author, String genre, int numOfCopies) throws Exception {
+		// method for add user data in database
+		public static int loanBook(int bookId, int userId) throws Exception {
 		
-		createTableBook();//create table if it does not already exist.
+		createTableLoan();//create table if it does not already exist.
 		
 		int i = 0 ;
 			try {
-				String sql = "INSERT INTO User (bookName, author, genre, numOfCopies)"
-						+ " VALUES (?,?,?,?,?,?)";
+				String sql = "INSERT INTO Loan (bookId, userId)"
+						+ " VALUES (?,?)";
 				PreparedStatement ps = getConnection().prepareStatement(sql);
-				ps.setString(1, bookName);
-				ps.setString(2, author);
-				ps.setString(3, genre);
-				ps.setInt(4, numOfCopies);
+				ps.setInt(1, bookId);
+				ps.setInt(2, userId);
 				i = ps.executeUpdate();
 				return i;
 			} catch (Exception e) {
@@ -70,11 +66,11 @@ public class BookTransaction {
 			} 
 		}
 
-		// method to fetch data from book
-		public ResultSet getAllBooks() throws SQLException, Exception {
+		// method to fetch data from loan table
+		public ResultSet getAllLoans() throws SQLException, Exception {
 			ResultSet rs = null;
 			try {
-				String sql = "SELECT * FROM Book";
+				String sql = "SELECT * FROM Loan";
 				PreparedStatement ps = getConnection().prepareStatement(sql);
 				rs = ps.executeQuery();
 				return rs;
@@ -88,13 +84,13 @@ public class BookTransaction {
 			}
 		}
 
-		// method to fetch a specific piece of data by book name
-		public ResultSet getOneByName(String bookName) throws SQLException, Exception {
+		// method to fetch a specific piece of data by loan id
+		public ResultSet getOneById(int loanId) throws SQLException, Exception {
 			ResultSet rs = null;
 			try {
-				String sql = "SELECT * FROM Book WHERE bookName=?";
+				String sql = "SELECT * FROM Loan WHERE loanId=?";
 				PreparedStatement ps = getConnection().prepareStatement(sql);
-				ps.setString(1, bookName );
+				ps.setInt(1, loanId);
 				rs = ps.executeQuery();
 				return rs;
 			} catch (Exception e) {
@@ -107,13 +103,13 @@ public class BookTransaction {
 			}
 		}
 		
-		// method to fetch a specific piece of data by author
-				public ResultSet getOneByAuthor(String author) throws SQLException, Exception {
+		// method to fetch a specific piece of data by user id
+				public ResultSet getOneByuserId(int userId) throws SQLException, Exception {
 					ResultSet rs = null;
 					try {
-						String sql = "SELECT * FROM Book WHERE author=?";
+						String sql = "SELECT * FROM Loan WHERE userId=?";
 						PreparedStatement ps = getConnection().prepareStatement(sql);
-						ps.setString(1, author );
+						ps.setInt(1, userId);
 						rs = ps.executeQuery();
 						return rs;
 					} catch (Exception e) {
@@ -130,9 +126,9 @@ public class BookTransaction {
 				public ResultSet getOneByBookId(int bookId) throws SQLException, Exception {
 					ResultSet rs = null;
 					try {
-						String sql = "SELECT * FROM Book WHERE bookId=?";
+						String sql = "SELECT * FROM Loan WHERE bookId=?";
 						PreparedStatement ps = getConnection().prepareStatement(sql);
-						ps.setInt(1, bookId );
+						ps.setInt(1, bookId);
 						rs = ps.executeQuery();
 						return rs;
 					} catch (Exception e) {
@@ -145,19 +141,18 @@ public class BookTransaction {
 					}
 				}
 
-		// method to update book information
-		public int updateBookDetails(String bookName, String author, String genre, int numOfCopies, int bookId )
+		// method to update loan information
+		public int updateLoan(int bookId, int userId, int loanId)
 				throws SQLException, Exception {
 			getConnection().setAutoCommit(false);
 			int i = 0;
 			try {
-				String sql = "UPDATE User SET bookName=?,author=?,genre=?,numOfCopies=? WHERE bookId=?";
+				String sql = "UPDATE Loan SET bookId=?,userId=? WHERE loanId=?";
 				PreparedStatement ps = getConnection().prepareStatement(sql);
-				ps.setString(1, bookName);
-				ps.setString(2, author);
-				ps.setString(3, genre);
-				ps.setInt(4, numOfCopies);
-				ps.setInt(5, bookId);
+				ps.setInt(1, bookId);
+				ps.setInt(2, userId);
+				ps.setInt(3, loanId);
+				
 				i = ps.executeUpdate();
 				return i;
 			} catch (Exception e) {
@@ -171,14 +166,14 @@ public class BookTransaction {
 			}
 		}
 
-		// method to delete book by id
-		public int deleteBook(int bookId) throws SQLException, Exception {
+		// method to delete loan with its id
+		public int deleteUserDetails(int loanId) throws SQLException, Exception {
 			getConnection().setAutoCommit(false);
 			int i = 0;
 			try {
-				String sql = "DELETE FROM Book WHERE bookId=?";
+				String sql = "DELETE FROM Loan WHERE loanId=?";
 				PreparedStatement ps = getConnection().prepareStatement(sql);
-				ps.setInt(1, bookId);
+				ps.setInt(1, loanId);
 				i = ps.executeUpdate();
 				return i;
 			} catch (Exception e) {
@@ -191,8 +186,5 @@ public class BookTransaction {
 				}
 			}
 		}
-	}
 
-
-
-
+}

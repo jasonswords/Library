@@ -16,7 +16,7 @@ public class DBDemo
   {
     System.out.println(dbClassName);
     // Class.forName(xxx) loads the jdbc classes and
-    // creates a drivermanager class factory
+    // creates a driver manager class factory
     Class.forName(dbClassName);
 
     // Properties for user and password. Here the user and password are both 'paulr'

@@ -7,7 +7,7 @@ public class Transaction {
 	private User user;
 
 	public Transaction() {
-		this.transId = 0; 
+		this.transId = 0;
 		this.book = new Book();
 		this.user = new User();
 	}
@@ -41,6 +41,61 @@ public class Transaction {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	////////////////////////////
+	// BOOK WRAPPER METHODS
+	///////////////////////////
+	public int getBookId() {
+		return book.getBookId();
+	}
+
+	public String getBookName() {
+		return book.getBookName();
+	}
+
+	public String getAuthor() {
+		return book.getAuthor();
+	}
+
+	public String getGenre() {
+		return book.getGenre();
+	}
+
+	public int getNumOfCopies() {
+		return book.getNumOfCopies();
+	}
+
+	/////////////////////////////////////
+	// USER WRAPPER METHODS
+	/////////////////////////////////////
+
+	public int getUserId() {
+		return user.getUserId();
+	}
+
+	public String getFirstName() {
+		return user.getFirstName();
+	}
+
+	public String getSurName() {
+		return user.getSurName();
+	}
+
+	public String getPhone() {
+		return user.getPhone();
+	}
+
+	public String getAddress1() {
+		return user.getAddress1();
+	}
+
+	public String getAddress2() {
+		return user.getAddress2();
+	}
+
+	public String getAddress3() {
+		return user.getAddress3();
 	}
 
 }
