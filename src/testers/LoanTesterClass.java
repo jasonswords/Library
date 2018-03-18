@@ -1,10 +1,17 @@
 package testers;
 
+import java.util.ArrayList;
+
+import object.Loan;
+
 public class LoanTesterClass {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		ArrayList<Loan> loan = new ArrayList<Loan>();
+		
+		
+		
 	}
 
 }
