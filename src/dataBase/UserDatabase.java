@@ -45,18 +45,13 @@ public class UserDatabase {
 			i = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if (i == -1) {
-				System.out.println("The result returned is " + i);
-			}
-		}
+		} 
 	}
 
 	// method for add user data in database
 	public int addUser(String firstName, String surName, String address1, String address2, String address3,
 			String phone) throws Exception {
-		UserDatabase d = new UserDatabase();
-		d.createTableUser();// create table if it does not already exist.
+		this.createTableUser();// create table if it does not already exist.
 
 		int i = 0;
 		try {

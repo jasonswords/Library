@@ -5,10 +5,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import object.BookReservation;
 
 public class BookReservationDatabase {
 	private static String password = "toor";
 	private static String username = "root";
+	
+	ArrayList<BookReservation> bookRes;
 
 	// method for create connection
 	public static Connection getConnection() throws Exception {
@@ -23,34 +28,30 @@ public class BookReservationDatabase {
 	}
 
 	// create table if not already created
-	public static void createTableReservation() {
+	public int createTableReservation() {
 		int i = 0;
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS Reservation" +
-					"(" 
-					+ "reservationId INT AUTO_INCREMENT,"
+			String sql = "CREATE TABLE IF NOT EXISTS Reservation"
+					+ "("
+					+ "reservationId INT AUTO_INCREMENT NOT NULL,"
 					+ "userId INT," + "bookId INT," 
-					+ "PRIMARY KEY(reservationId)" 
+					+ "PRIMARY KEY(reservationId)"
 					+ ");";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			i = ps.executeUpdate();
+			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			if (i == -1) {
-				System.out.println("The result returned is " + i);
-			}
-		}
+			return 0;
+		} 
 	}
 
 	// method for add reservation to table
-	public static int reserveBook(int userId, int bookId) throws Exception {
-
-		createTableReservation();// create table if it does not already exist.
-
+	public int reserveBook(int userId, int bookId) throws Exception {
+		this.createTableReservation();// create table if it does not already exist.
 		int i = 0;
 		try {
-			String sql = "INSERT INTO Loan (bookId, userId)" + " VALUES (?,?)";
+			String sql = "INSERT INTO Reservation (bookId, userId)" + " VALUES (?,?)";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			ps.setInt(2, bookId);
@@ -67,13 +68,18 @@ public class BookReservationDatabase {
 	}
 
 	// method to fetch data from reservation table
-	public ResultSet getAllReservations() throws SQLException, Exception {
+	public ArrayList<BookReservation> getAllReservations() throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
-			return rs;
+			bookRes = new ArrayList<BookReservation>();
+			bookRes = null;
+			while(rs.next()) {
+				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+			}
+			return bookRes;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -85,14 +91,19 @@ public class BookReservationDatabase {
 	}
 
 	// method to fetch a specific piece of data by reservation id
-	public ResultSet getOneByReservationId(int reservationId) throws SQLException, Exception {
+	public ArrayList<BookReservation> getOneByReservationId(int reservationId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation WHERE reservationId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, reservationId);
 			rs = ps.executeQuery();
-			return rs;
+			bookRes = new ArrayList<BookReservation>();
+			bookRes = null;
+			while(rs.next()) {
+				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+			}
+			return bookRes;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -104,14 +115,19 @@ public class BookReservationDatabase {
 	}
 
 	// method to fetch a specific piece of data by user id
-	public ResultSet getOneByuserId(int userId) throws SQLException, Exception {
+	public ArrayList<BookReservation> getOneByuserId(int userId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation WHERE userId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
-			return rs;
+			bookRes = new ArrayList<BookReservation>();
+			bookRes = null;
+			while(rs.next()) {
+				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+			}
+			return bookRes;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -123,14 +139,19 @@ public class BookReservationDatabase {
 	}
 
 	// method to fetch a specific piece of data by book id
-	public ResultSet getOneByBookId(int bookId) throws SQLException, Exception {
+	public ArrayList<BookReservation> getOneByBookId(int bookId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation WHERE bookId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
-			return rs;
+			bookRes = new ArrayList<BookReservation>();
+			bookRes = null;
+			while(rs.next()) {
+				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+			}
+			return bookRes;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

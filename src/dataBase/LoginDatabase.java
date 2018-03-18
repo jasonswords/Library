@@ -45,11 +45,7 @@ public class LoginDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
-		} finally {
-			if (i == -1) {
-				System.out.println("The result returned is " + i);
-			}
-		}
+		} 
 	}
 
 	// method for add login details to login table

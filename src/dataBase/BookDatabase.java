@@ -47,17 +47,12 @@ public class BookDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
-		} finally {
-			if (i == -1) {
-				System.out.println("The result returned is " + i);
-			}
-		}
+		} 
 	}
 
 	// method for add book data in database
 	public int addBook(String bookName, String author, String genre, int numOfCopies) throws Exception {
-		BookDatabase b = new BookDatabase();
-		b.createTableBook();// create table if it does not already exist.
+		this.createTableBook();// create table if it does not already exist.
 		int i = 0;
 		try {
 			String sql = "INSERT INTO Book (bookName, author, genre, numOfCopies)" 
