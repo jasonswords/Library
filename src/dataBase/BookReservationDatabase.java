@@ -34,7 +34,8 @@ public class BookReservationDatabase {
 			String sql = "CREATE TABLE IF NOT EXISTS Reservation"
 					+ "("
 					+ "reservationId INT AUTO_INCREMENT NOT NULL,"
-					+ "userId INT," + "bookId INT," 
+					+ "userId INT,"
+					+ "bookId INT," 
 					+ "PRIMARY KEY(reservationId)"
 					+ ");";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -75,7 +76,6 @@ public class BookReservationDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			bookRes = null;
 			while(rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
@@ -99,7 +99,6 @@ public class BookReservationDatabase {
 			ps.setInt(1, reservationId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			bookRes = null;
 			while(rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
@@ -123,7 +122,6 @@ public class BookReservationDatabase {
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			bookRes = null;
 			while(rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
@@ -147,7 +145,6 @@ public class BookReservationDatabase {
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			bookRes = null;
 			while(rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
@@ -187,7 +184,7 @@ public class BookReservationDatabase {
 	}
 
 	// method to delete reservation by id
-	public int deleteUserDetails(int reservationId) throws SQLException, Exception {
+	public int deleteReservation(int reservationId) throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
 		int i = 0;
 		try {

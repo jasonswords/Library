@@ -77,7 +77,6 @@ public class LoginDatabase {
 			String sql = "SELECT * FROM Login";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
-			loginTrans = null;
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
 				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
@@ -101,7 +100,6 @@ public class LoginDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, loginId);
 			rs = ps.executeQuery();
-			loginTrans = null;
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
 				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
@@ -126,7 +124,6 @@ public class LoginDatabase {
 			ps.setInt(1, privilege);
 			rs = ps.executeQuery();
 			rs = ps.executeQuery();
-			loginTrans = null;
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
 				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
@@ -151,7 +148,6 @@ public class LoginDatabase {
 			ps.setString(1, username);
 			rs = ps.executeQuery();
 			rs = ps.executeQuery();
-			loginTrans = null;
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
 				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
@@ -175,7 +171,6 @@ public class LoginDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, password);
 			rs = ps.executeQuery();
-			loginTrans = null;
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
 				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));

@@ -83,7 +83,6 @@ public class UserDatabase {
 			String sql = "SELECT * FROM User";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
-			user = null;
 			user = new ArrayList<User>();
 			while (rs.next()) {
 				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
@@ -108,7 +107,6 @@ public class UserDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			rs = ps.executeQuery();
-			user = null;
 			user = new ArrayList<User>();
 			while (rs.next()) {
 				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
@@ -132,7 +130,6 @@ public class UserDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, surName);
 			rs = ps.executeQuery();
-			user = null;
 			user = new ArrayList<User>();
 			while (rs.next()) {
 				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
@@ -156,7 +153,6 @@ public class UserDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
-			user = null;
 			user = new ArrayList<User>();
 			while (rs.next()) {
 				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),

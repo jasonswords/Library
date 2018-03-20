@@ -41,19 +41,58 @@ public class ReservationTest {
 //		else System.out.println("Un - Successful");
 		
 		//METHOD 3
-		br = bookData.getAllReservations();
-		if(br == null) {
-			System.out.println("The return value is Null");
-		}else {
-			for(BookReservation re: br) {
-				System.out.println("Reservation id: "+re.getReserverationId()+"\nReservation Book Id: "+re.getBookId()+"\nReservation User Id: "+re.getUserId());
-			}
-		}
+//		br = bookData.getAllReservations();
+//		if(br == null) {
+//			System.out.println("The return value is Null");
+//		}else {
+//			for(BookReservation re: br) {
+//				System.out.println("\nReservation id: "+re.getReserverationId()+"\nReservation Book Id: "+re.getBookId()+"\nReservation User Id: "+re.getUserId());
+//			}
+//		}
+		
 		//METHOD 4
+//		br = bookData.getOneByReservationId(2);
+//		if(br == null) {
+//			System.out.println("The return value is Null");
+//		}else {
+//			for(BookReservation re: br) {
+//				System.out.println("\nReservation id: "+re.getReserverationId()+"\nReservation Book Id: "+re.getBookId()+"\nReservation User Id: "+re.getUserId());
+//			}
+//		}
+		
 		//METHOD 5
+//		br = bookData.getOneByuserId(4);
+//		if(br == null) {
+//			System.out.println("The return value is Null");
+//		}else {
+//			for(BookReservation re: br) {
+//				System.out.println("\nReservation id: "+re.getReserverationId()+"\nReservation Book Id: "+re.getBookId()+"\nReservation User Id: "+re.getUserId());
+//			}
+//		}
+		
 		//METHOD 6
+//		br = bookData.getOneByBookId(2);
+//		if(br == null) {
+//			System.out.println("The return value is Null");
+//		}else {
+//			for(BookReservation re: br) {
+//				System.out.println("\nReservation id: "+re.getReserverationId()+"\nReservation Book Id: "+re.getBookId()+"\nReservation User Id: "+re.getUserId());
+//			}
+//		}
+		
 		//METHOD 7
+//		int n = bookData.updateLoan(2, 1, 2);
+//		if(n == 1) {
+//			System.out.println("Successful");
+//		}
+//		else System.out.println("Un - Successful");
+		
 		//METHOD 8
+		int n = bookData.deleteReservation(1);
+		if(n == 1) {
+			System.out.println("Successful");
+		}
+		else System.out.println("Un - Successful");
 	}
 
 }

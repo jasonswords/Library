@@ -5,8 +5,7 @@ public class BookReservation {
 	private int bookId;
 	private int userId;
 
-	public BookReservation(int reserverationId, int bookId, int userId) {
-		super();
+	public BookReservation(int reserverationId, int userId,int bookId) {
 		this.reserverationId = reserverationId;
 		this.bookId = bookId;
 		this.userId = userId;
