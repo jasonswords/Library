@@ -2,11 +2,15 @@ package testers;
 
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import dataBase.LoanDatabase;
+=======
+>>>>>>> fa8169580ddf68e7132ea5cd86694983d701a1e0
 import object.Loan;
 
 public class LoanTesterClass {
 
+<<<<<<< HEAD
 	public static void main(String[] args) throws Exception {
 		ArrayList<Loan> loan = new ArrayList<Loan>();
 		LoanDatabase ld = new LoanDatabase();
@@ -92,6 +96,14 @@ public class LoanTesterClass {
 		}
 		else System.out.println("Un - Successful");
 
+=======
+	public static void main(String[] args) {
+		
+		ArrayList<Loan> loan = new ArrayList<Loan>();
+		
+		
+		
+>>>>>>> fa8169580ddf68e7132ea5cd86694983d701a1e0
 	}
 
 }
