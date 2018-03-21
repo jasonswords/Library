@@ -14,6 +14,7 @@ public class BookDatabase {
 	private static String username = "root";
 
 	ArrayList<Book> book;
+	Book b;
 
 	// method for create connection
 	public static Connection getConnection() throws Exception {
@@ -157,6 +158,28 @@ public class BookDatabase {
 				book.add(new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
 			}
 			return book;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+	
+	public Book getOneBookByBookId(int bookId) throws SQLException, Exception {
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM Book WHERE bookId=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setInt(1, bookId);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				b = new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+			}
+			return b;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

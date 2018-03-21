@@ -13,8 +13,9 @@ public class UserDatabase {
 	private static String password = "toor";
 	private static String username = "root";
 	static ArrayList<User> user;
+	User u;
 
-	// method for create connection
+	// CREATE CONNECTION TO DATABASE
 	public static Connection getConnection() throws Exception {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -26,6 +27,7 @@ public class UserDatabase {
 		}
 	}
 
+	//CREATE TABLE IN DATABASE FOR USER OBJECTS
 	public void createTableUser() {
 		int i = 0;
 		try {
@@ -38,7 +40,8 @@ public class UserDatabase {
 					+ "address2 VARCHAR(255)," 
 					+ "address3 VARCHAR(255)," 
 					+ "phone VARCHAR(255),"
-					+ " PRIMARY KEY (userId)"
+					+ "loginId INT,"
+					+ "PRIMARY KEY (userId)"
 					+ ");";
 
 			PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -48,15 +51,15 @@ public class UserDatabase {
 		} 
 	}
 
-	// method for add user data in database
+	// ADD USER OBJECTS TO DATABASE -- RETURN INT FOR SUCCESS/FAILURE
 	public int addUser(String firstName, String surName, String address1, String address2, String address3,
-			String phone) throws Exception {
+			String phone, int loginId) throws Exception {
 		this.createTableUser();// create table if it does not already exist.
 
 		int i = 0;
 		try {
-			String sql = "INSERT INTO User (firstName, surName, address1, address2, address3, phone)"
-					+ " VALUES (?,?,?,?,?,?)";
+			String sql = "INSERT INTO User (firstName, surName, address1, address2, address3, phone, loginId)"
+					+ " VALUES (?,?,?,?,?,?,?)";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			ps.setString(2, surName);
@@ -64,6 +67,7 @@ public class UserDatabase {
 			ps.setString(4, address2);
 			ps.setString(5, address3);
 			ps.setString(6, phone);
+			ps.setInt(7, loginId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
@@ -76,7 +80,7 @@ public class UserDatabase {
 		}
 	}
 
-	// method to fetch data from tables
+	// RETURN ARRAYLIST OF ALL USER OBJECTS IN DATABASE
 	public ArrayList<User> getAllUsers() throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -85,8 +89,7 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -99,7 +102,8 @@ public class UserDatabase {
 		}
 	}
 
-	// method to fetch a specific piece of data by firstName
+	//????????
+	// RETURN ARRAYLIST OF USER OBJECTS WHERE FIRSTNAME IS
 	public ArrayList<User> getOneByName(String firstName) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -109,8 +113,7 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -123,6 +126,7 @@ public class UserDatabase {
 		}
 	}
 
+	// RETURN ARRAYLIST OF USER OBJECTS WHERE SURNAME IS
 	public ArrayList<User> getOneBySurName(String surName) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -132,8 +136,7 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -146,6 +149,7 @@ public class UserDatabase {
 		}
 	}
 
+	// RETURN ARRAYLIST OF USER OBJECTS WHERE USERID IS
 	public ArrayList<User> getOneById(int userId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -155,10 +159,54 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
 			}
 			return user;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+	
+	//RETURN 
+	public User getOneUserById(int userId) throws SQLException, Exception {
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM User WHERE userId=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+			}
+			return u;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+	
+	public User getOneUserByLoginId(int userId) throws SQLException, Exception {
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM User WHERE loginId=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+			}
+			return u;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

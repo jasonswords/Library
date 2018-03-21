@@ -9,28 +9,27 @@ public class User {
 	private String address2;
 	private String address3;
 	private String phone;
+	private Login login;
 
 	public User() {
 		super();
+		login = new Login();
 	}
 
-	public User(int userId, String firstName, String surName, String address1, String address2,String address3,String phone) {
+	public User(int userId, String firstName, String surName, String address1, String address2, String address3,
+			String phone) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
 		this.surName = surName;
-		this.phone = phone;
 		this.address1 = address1;
 		this.address2 = address2;
 		this.address3 = address3;
+		this.phone = phone;
 	}
 
 	public int getUserId() {
 		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
 	}
 
 	public String getFirstName() {
@@ -47,14 +46,6 @@ public class User {
 
 	public void setSurName(String surName) {
 		this.surName = surName;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	public String getAddress1() {
@@ -79,6 +70,33 @@ public class User {
 
 	public void setAddress3(String address3) {
 		this.address3 = address3;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	///////////////////////
+	// WRAPPER METHODS
+	///////////////////////
+	public int getLoginId() {
+		return login.getLoginId();
+	}
+
+	public String getUserName() {
+		return login.getUserName();
+	}
+
+	public String getPassword() {
+		return login.getPassword();
+	}
+
+	public int getPrivilege() {
+		return login.getPrivilege();
 	}
 
 }

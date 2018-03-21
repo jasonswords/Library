@@ -14,8 +14,9 @@ public class LoginDatabase {
 	private static String username = "root";
 
 	static ArrayList<Login> loginTrans;
+	Login l;
 
-	// method for create connection
+	//CREATE CONNECTION TO DATABASE
 	public static Connection getConnection() throws Exception {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -27,7 +28,7 @@ public class LoginDatabase {
 		}
 	}
 
-	// create table if not already created
+	// CREATE TABLE IN DATABASE FOR LOGIN OBJECTS
 	public int createTableLogin() {
 		int i = 0;
 		try {
@@ -37,6 +38,7 @@ public class LoginDatabase {
 					+ "userName varchar(255),"
 					+ "password varchar(255),"
 					+ "privilege INT,"
+					+ "userId INT,"
 					+ " PRIMARY KEY(loginId)"
 					+ ");";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -48,16 +50,17 @@ public class LoginDatabase {
 		} 
 	}
 
-	// method for add login details to login table
-	public int addLogin(String username, String password, int privilege) throws Exception {
+	// ADD LOGIN OBJECT TO DATABASE -- RETURN INT IF TRUE/FALSE
+	public int addLogin(String username, String password, int privilege, int userId) throws Exception {
 		this.createTableLogin();// create table if it does not already exist.
 		int i = 0;
 		try {
-			String sql = "INSERT INTO Login (username, password, privilege)" + " VALUES (?,?,?)";
+			String sql = "INSERT INTO Login (username, password, privilege, userId)" + " VALUES (?,?,?)";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ps.setInt(3, privilege);
+			ps.setInt(4, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
@@ -70,7 +73,7 @@ public class LoginDatabase {
 		}
 	}
 
-	// method to fetch data from login table
+	// RETURN ARRAYLIST OF ALL LOGI  OBJECTS IN DATABASE
 	public ArrayList<Login> getAllLogin() throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -79,7 +82,7 @@ public class LoginDatabase {
 			rs = ps.executeQuery();
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
-				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
 			}
 			return loginTrans;
 		} catch (Exception e) {
@@ -92,7 +95,8 @@ public class LoginDatabase {
 		}
 	}
 
-	// method to fetch a specific piece of data by login id
+	//?????
+	//RETURN ARRAYLIST OF LOGIN OBJECTS WHERE LOGIN ID IS  
 	public ArrayList<Login> getOneByLoginId(int loginId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -102,7 +106,7 @@ public class LoginDatabase {
 			rs = ps.executeQuery();
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
-				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
 			}
 			return loginTrans;
 		} catch (Exception e) {
@@ -114,8 +118,30 @@ public class LoginDatabase {
 			}
 		}
 	}
+	
+	//RETURN A SINGLE LOGIN OBJECT USING LOGIN ID
+	public Login getOneLoginByLoginId(int loginId) throws SQLException, Exception {
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM Login WHERE loginId=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setInt(1, loginId);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				l = new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5));
+			}
+			return l;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
 
-	// method to fetch a specific piece of data by user name
+	//RETURN ARRAYLIST OF LOGIN OBJECTS WHERE LOGIN PRIVILEGE IS GIVEN
 	public ArrayList<Login> getOneByPrivilege(int privilege) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -126,7 +152,7 @@ public class LoginDatabase {
 			rs = ps.executeQuery();
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
-				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
 			}
 			return loginTrans;
 		} catch (Exception e) {
@@ -139,7 +165,7 @@ public class LoginDatabase {
 		}
 	}
 
-	// method to fetch a specific piece of data by user name
+	// RETRUN ARRAYLIST OF LOGIN OBJECTS WHERE USERNAME IS GIVEN
 	public ArrayList<Login> getOneByUsername(String username) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -150,7 +176,7 @@ public class LoginDatabase {
 			rs = ps.executeQuery();
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
-				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
 			}
 			return loginTrans;
 		} catch (Exception e) {
@@ -163,7 +189,7 @@ public class LoginDatabase {
 		}
 	}
 
-	// method to fetch a specific piece of data by user name
+	// RETRUN ARRAYLIST OF LOGIN OBJECTS WHERE PASSWORD IS GIVEN
 	public ArrayList<Login> getOneByPassword(String password) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -173,7 +199,7 @@ public class LoginDatabase {
 			rs = ps.executeQuery();
 			loginTrans = new ArrayList<Login>();
 			while (rs.next()) {
-				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+				loginTrans.add(new Login(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5)));
 			}
 			return loginTrans;
 		} catch (Exception e) {
@@ -186,7 +212,7 @@ public class LoginDatabase {
 		}
 	}
 
-	// method to update Login information
+	// UPDATE LOGIN OBJECT WHERE LOGIN ID IS
 	public int updateLoginDetailsById(String username, String password, int privilege, int loginId)
 			throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
@@ -212,7 +238,7 @@ public class LoginDatabase {
 		}
 	}
 
-	// method to delete login by id
+	// DELETE LOGIN OBJECT WHERE LOGIN OBJECT ID IS
 	public int deleteLoginDetails(int loginId) throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
 		int i = 0;

@@ -10,8 +10,14 @@ public class Book extends Product {
 	public Book() {
 	}
 
-	public Book(int bookId, String bookName, String author, String genre, int numOfCopies) {
-		super();
+	public Book( String bookName, String author, String genre, int numOfCopies) {
+		this.bookName = bookName;
+		this.author = author;
+		this.genre = genre;
+		this.numOfCopies = numOfCopies;
+	}
+	
+	public Book(int bookId,  String bookName, String author, String genre, int numOfCopies) {
 		this.bookId = bookId;
 		this.bookName = bookName;
 		this.author = author;
@@ -21,10 +27,6 @@ public class Book extends Product {
 
 	public int getBookId() {
 		return bookId;
-	}
-
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
 	}
 
 	public String getBookName() {
