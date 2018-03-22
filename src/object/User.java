@@ -15,11 +15,35 @@ public class User {
 		super();
 		login = new Login();
 	}
+	
+	public User(int userId, String firstName, String surName, String address1, String address2, String address3,
+			String phone, Login login) {
+		super();
+		this.userId = userId;
+		this.firstName = firstName;
+		this.surName = surName;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.address3 = address3;
+		this.phone = phone;
+		this.login = login;
+	}
 
 	public User(int userId, String firstName, String surName, String address1, String address2, String address3,
 			String phone) {
 		super();
 		this.userId = userId;
+		this.firstName = firstName;
+		this.surName = surName;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.address3 = address3;
+		this.phone = phone;
+	}
+	
+	public User( String firstName, String surName, String address1, String address2, String address3,
+			String phone) {
+		super();
 		this.firstName = firstName;
 		this.surName = surName;
 		this.address1 = address1;

@@ -74,6 +74,36 @@ public class BookDatabase {
 			}
 		}
 	}
+	
+	// ADD BOOK OBJECT TO DATABASE-- METHOD TAKES IN BOOK OBJECT
+		public int addBook(Book b) throws Exception {
+			String bookName = b.getBookName();
+			String author = b.getAuthor();
+			String genre = b.getGenre();
+			int numOfCopies = b.getNumOfCopies();
+			System.out.println("in the method");
+			// CREATE TABLE IF NOT ALREADY CREATED
+			this.createTableBook();
+			int i = 0;
+			try {
+				String sql = "INSERT INTO Book (bookName, author, genre, numOfCopies)" 
+							+ " VALUES (?,?,?,?)";
+				PreparedStatement ps = getConnection().prepareStatement(sql);
+				ps.setString(1, bookName);
+				ps.setString(2, author);
+				ps.setString(3, genre);
+				ps.setInt(4, numOfCopies);
+				i = ps.executeUpdate();
+				return i;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			} finally {
+				if (getConnection() != null) {
+					getConnection().close();
+				}
+			}
+		}
 
 	// method to fetch data from book
 	public ArrayList<Book> getAllBooks() throws SQLException, Exception {
