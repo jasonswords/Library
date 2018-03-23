@@ -9,28 +9,29 @@ public class User {
 	private String address2;
 	private String address3;
 	private String phone;
-	private Login login;
+	private String username;
+	private String password;
+	private int privilege;
 
 	public User() {
-		super();
-		login = new Login();
 	}
-	
-	public User(int userId, String firstName, String surName, String address1, String address2, String address3,
-			String phone, Login login) {
+
+	public User(String firstName, String surName, String address1, String address2, String address3, String phone,
+			String username, String password, int privilege) {
 		super();
-		this.userId = userId;
 		this.firstName = firstName;
 		this.surName = surName;
 		this.address1 = address1;
 		this.address2 = address2;
 		this.address3 = address3;
 		this.phone = phone;
-		this.login = login;
+		this.username = username;
+		this.password = password;
+		this.privilege = privilege;
 	}
 
 	public User(int userId, String firstName, String surName, String address1, String address2, String address3,
-			String phone) {
+			String phone, String username, String password, int privilege) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -39,17 +40,9 @@ public class User {
 		this.address2 = address2;
 		this.address3 = address3;
 		this.phone = phone;
-	}
-	
-	public User( String firstName, String surName, String address1, String address2, String address3,
-			String phone) {
-		super();
-		this.firstName = firstName;
-		this.surName = surName;
-		this.address1 = address1;
-		this.address2 = address2;
-		this.address3 = address3;
-		this.phone = phone;
+		this.username = username;
+		this.password = password;
+		this.privilege = privilege;
 	}
 
 	public int getUserId() {
@@ -104,23 +97,28 @@ public class User {
 		this.phone = phone;
 	}
 
-	///////////////////////
-	// WRAPPER METHODS
-	///////////////////////
-	public int getLoginId() {
-		return login.getLoginId();
+	public String getUsername() {
+		return username;
 	}
 
-	public String getUserName() {
-		return login.getUserName();
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
-		return login.getPassword();
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public int getPrivilege() {
-		return login.getPrivilege();
+		return privilege;
+	}
+
+	public void setPrivilege(int privilege) {
+		this.privilege = privilege;
 	}
 
 }

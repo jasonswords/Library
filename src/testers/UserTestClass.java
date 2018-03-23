@@ -63,11 +63,11 @@ public class UserTestClass {
 //		}
 		
 		//METHOD 7
-//		int n = userDB.updateUserDetails("dylan", "swords", "dd", "dd", "d", "24752462", 4);
-//		if(n == 0) 
-//			System.out.println("The update was unsuccessful");
-//		
-//		else System.out.println("The update was a success");
+		int n = userDB.updateUserDetails("dylan", "swords", "add1", "add2", "add3", "123421321", "dylan", "dylan", 1, 2);
+		if(n == 0) 
+			System.out.println("The update was unsuccessful");
+		
+		else System.out.println("The update was a success");
 		
 		//MRTHOD 8
 //		int n = userDB.deleteUserDetails(3);

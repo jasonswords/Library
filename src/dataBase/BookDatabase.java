@@ -81,7 +81,6 @@ public class BookDatabase {
 			String author = b.getAuthor();
 			String genre = b.getGenre();
 			int numOfCopies = b.getNumOfCopies();
-			System.out.println("in the method");
 			// CREATE TABLE IF NOT ALREADY CREATED
 			this.createTableBook();
 			int i = 0;
@@ -237,8 +236,7 @@ public class BookDatabase {
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
-			return -1;
+			return 1;
 		} finally {
 			if (getConnection() != null) {
 				getConnection().close();
@@ -259,7 +257,7 @@ public class BookDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			getConnection().rollback();
-			return 0;
+			return -1;
 		} finally {
 			if (getConnection() != null) {
 				getConnection().close();

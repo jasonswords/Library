@@ -41,12 +41,12 @@ public class BookTestClass {
 //			System.out.println("successful"+n);
 		
 		//METHOD 3
-		book = bd.getAllBooks();
-		for (Book b : book) {
-			System.out.println("Book id: " + b.getBookId() + "\nBook name: " + b.getBookName() + "\nBook author: "
-					+ b.getAuthor() + "\nBook genre: " + b.getGenre() + "\nBook number of copies: " + b.getNumOfCopies()
-					+ "\n" + "\n");
-		}
+//		book = bd.getAllBooks();
+//		for (Book b : book) {
+//			System.out.println("Book id: " + b.getBookId() + "\nBook name: " + b.getBookName() + "\nBook author: "
+//					+ b.getAuthor() + "\nBook genre: " + b.getGenre() + "\nBook number of copies: " + b.getNumOfCopies()
+//					+ "\n" + "\n");
+//		}
 		
 		//METHOD 4
 //		book = bd.getOneByName("beauty");
@@ -87,13 +87,13 @@ public class BookTestClass {
 //			System.out.println("successful   =  "+n);
 		
 		//METHOD 9
-//		book = bd.searchBooks("beauty");
-//
-//		for (Book b : book) {
-//			System.out.println("Book id: " + b.getBookId() + "\nBook name: " + b.getBookName() + "\nBook author: "
-//					+ b.getAuthor() + "\nBook genre: " + b.getGenre() + "\nBook number of copies: " + b.getNumOfCopies()
-//					+ "\n" + "\n");
-		// }
+		book = bd.searchBooks("black");
+
+		for (Book b : book) {
+			System.out.println("Book id: " + b.getBookId() + "\nBook name: " + b.getBookName() + "\nBook author: "
+					+ b.getAuthor() + "\nBook genre: " + b.getGenre() + "\nBook number of copies: " + b.getNumOfCopies()
+					+ "\n" + "\n");
+		 }
 
 	}// END MAIN
 

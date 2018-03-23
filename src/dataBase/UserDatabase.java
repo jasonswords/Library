@@ -27,20 +27,22 @@ public class UserDatabase {
 		}
 	}
 
-	//CREATE TABLE IN DATABASE FOR USER OBJECTS
+	// CREATE TABLE IN DATABASE FOR USER OBJECTS
 	public void createTableUser() {
 		int i = 0;
 		try {
 			String sql = "	CREATE TABLE IF NOT EXISTS User " 
 					+ "( " 
-					+ "userId INT AUTO_INCREMENT NOT NULL,"
-					+ "firstName VARCHAR(255),"
+					+ "userId INT AUTO_INCREMENT,"
+					+ "firstName VARCHAR(255)," 
 					+ "surName VARCHAR(255)," 
 					+ "address1 VARCHAR(255), "
-					+ "address2 VARCHAR(255)," 
+					+ "address2 VARCHAR(255),"
 					+ "address3 VARCHAR(255)," 
 					+ "phone VARCHAR(255),"
-					+ "loginId INT,"
+					+ "userName varchar(255)," 
+					+ "password varchar(255),"
+					+ "privilege INT,"
 					+ "PRIMARY KEY (userId)"
 					+ ");";
 
@@ -48,18 +50,18 @@ public class UserDatabase {
 			i = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	// ADD USER OBJECTS TO DATABASE -- RETURN INT FOR SUCCESS/FAILURE
 	public int addUser(String firstName, String surName, String address1, String address2, String address3,
-			String phone, int loginId) throws Exception {
+			String phone, String userName, String password, int privilege) throws Exception {
 		this.createTableUser();// create table if it does not already exist.
 
 		int i = 0;
 		try {
-			String sql = "INSERT INTO User (firstName, surName, address1, address2, address3, phone, loginId)"
-					+ " VALUES (?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO User (firstName, surName, address1, address2, address3, phone, userName, password, privilege)"
+					+ " VALUES (?,?,?,?,?,?,?,?,?)";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			ps.setString(2, surName);
@@ -67,7 +69,9 @@ public class UserDatabase {
 			ps.setString(4, address2);
 			ps.setString(5, address3);
 			ps.setString(6, phone);
-			ps.setInt(7, loginId);
+			ps.setString(7, userName);
+			ps.setString(8, password);
+			ps.setInt(9, privilege);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
@@ -89,7 +93,7 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -102,7 +106,7 @@ public class UserDatabase {
 		}
 	}
 
-	//????????
+	// ????????
 	// RETURN ARRAYLIST OF USER OBJECTS WHERE FIRSTNAME IS
 	public ArrayList<User> getOneByName(String firstName) throws SQLException, Exception {
 		ResultSet rs = null;
@@ -113,9 +117,31 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+	
+	public User getUserByFirstName(String firstName) throws SQLException, Exception {
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM User WHERE firstName=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setString(1, firstName);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+			u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+			}
+			return u;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -136,7 +162,7 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -159,7 +185,7 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -171,8 +197,8 @@ public class UserDatabase {
 			}
 		}
 	}
-	
-	//RETURN 
+
+	// RETURN
 	public User getOneUserById(int userId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -180,31 +206,8 @@ public class UserDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
-			
 			while (rs.next()) {
-				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
-			}
-			return u;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
-			}
-		}
-	}
-	
-	public User getOneUserByLoginId(int userId) throws SQLException, Exception {
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT * FROM User WHERE loginId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setInt(1, userId);
-			rs = ps.executeQuery();
-			
-			while (rs.next()) {
-				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
 			}
 			return u;
 		} catch (Exception e) {
@@ -219,11 +222,11 @@ public class UserDatabase {
 
 	// method to update user information
 	public int updateUserDetails(String firstName, String surName, String address1, String address2, String address3,
-			String phone, int userId) throws SQLException, Exception {
+			String phone, String userName, String password, int privilege, int userId) throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
-			String sql = "UPDATE User SET firstName=?,surName=?,address1=?,address2=?, address3=?, phone=? WHERE userId=?";
+			String sql = "UPDATE User SET firstName=?,surName=?,address1=?,address2=?, address3=?, phone=?, userName=?, password=?, privilege=? WHERE userId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			ps.setString(2, surName);
@@ -231,7 +234,10 @@ public class UserDatabase {
 			ps.setString(4, address2);
 			ps.setString(5, address3);
 			ps.setString(6, phone);
-			ps.setInt(7, userId);
+			ps.setString(7, userName);
+			ps.setString(8, password);
+			ps.setInt(9, privilege);
+			ps.setInt(10, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
@@ -265,5 +271,40 @@ public class UserDatabase {
 			}
 		}
 	}
+	
+	// RETRUN ARRAYLIST OF LOGIN OBJECTS WHERE PASSWORD IS GIVEN
+	public User getOneByPassword(String password) throws SQLException, Exception {
+		ResultSet rs = null;
+		
+		try {
+			String sql = "SELECT * FROM User WHERE password=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setString(1, password);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+			}
+			return u;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+	
+	//MEHTOD TO CHECK IF PASSWORD IS VALID
+	public boolean isPasswordValid(String passwd) throws Exception {
+	
+		u = this.getOneByPassword(passwd);
+	
+		if (u != null) {
+			return true;
+		}
+	
+	return false;
+}
 
 }
