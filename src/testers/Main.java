@@ -421,8 +421,19 @@ public class Main {
 			System.out.println("Enter password");
 			String password = scan.next();
 			scan.nextLine();
-			System.out.println("Enter privilege");
-			int privilege = scan.nextInt();
+			int privilege = 0;
+			do {
+				System.out.println("Enter privilege -- 1 for standard user ");
+				System.out.println("Enter privilege -- 2 for admin user");
+				String s = scan.next();
+				try {
+					privilege = Integer.parseInt(s);
+				} catch (Exception e) {
+					System.out.println("You did not enter a numericial value -- Try Again");
+				}
+
+			} while (privilege != 1 && privilege != 2);
+
 			scan.nextLine();
 
 			int i = ud.updateUserDetails(firstname, surname, add1, add2, add3, phone, username, password, privilege,
@@ -491,8 +502,19 @@ public class Main {
 		System.out.println("Enter password");
 		String password = scan.next();
 		scan.nextLine();
-		System.out.println("Enter privilege");
-		int privilege = scan.nextInt();
+		int privilege = 0;
+		do {
+			System.out.println("Enter privilege -- 1 for standard user ");
+			System.out.println("Enter privilege -- 2 for admin user");
+			String s = scan.next();
+			try {
+				privilege = Integer.parseInt(s);
+			} catch (Exception e) {
+				System.out.println("You did not enter a numericial value -- Try Again");
+			}
+
+		} while (privilege != 1 && privilege != 2);
+
 		scan.nextLine();
 		ud = new UserDatabase();
 		ud.addUser(firstname, surname, add1, add2, add3, phone, username, password, privilege);

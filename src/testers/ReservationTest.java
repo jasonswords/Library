@@ -1,15 +1,35 @@
 package testers;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import dataBase.BookReservationDatabase;
 import object.BookReservation;
 
 public class ReservationTest {
 	
 	public static void main(String []args) throws SQLException, Exception {
+		Scanner scan = new Scanner(System.in);
 		BookReservationDatabase bookData = new BookReservationDatabase();
 		ArrayList<BookReservation> br = new ArrayList<BookReservation>();
 		
+		
+		
+		int privilege = 0;
+		do {
+			System.out.println("in loop");
+			System.out.println("Privilege is "+privilege);
+			System.out.println("Enter privilege -- 1 for standard user ");
+			System.out.println("Enter privilege -- 2 for admin user");
+			privilege = scan.nextInt();
+			
+		}
+		while(privilege !=1 && privilege !=2);
+		
+		System.out.println("out of loop");
+		System.out.println("out of loop");
+		System.out.println("out of loop");
+		System.out.println("out of loop");
 		
 		
 		/*
