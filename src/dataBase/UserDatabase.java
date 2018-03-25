@@ -28,21 +28,21 @@ public class UserDatabase {
 	}
 
 	// CREATE TABLE IN DATABASE FOR USER OBJECTS
-	public void createTableUser() {
+	public void createTableUser() throws SQLException, Exception {
 		int i = 0;
 		try {
 			String sql = "	CREATE TABLE IF NOT EXISTS User " 
 					+ "( " 
 					+ "userId INT AUTO_INCREMENT,"
 					+ "firstName VARCHAR(255)," 
-					+ "surName VARCHAR(255)," 
+					+ "surName VARCHAR(255),"
 					+ "address1 VARCHAR(255), "
-					+ "address2 VARCHAR(255),"
+					+ "address2 VARCHAR(255)," 
 					+ "address3 VARCHAR(255)," 
 					+ "phone VARCHAR(255),"
 					+ "userName varchar(255)," 
 					+ "password varchar(255),"
-					+ "privilege INT,"
+					+ "privilege INT," 
 					+ "PRIMARY KEY (userId)"
 					+ ");";
 
@@ -50,6 +50,10 @@ public class UserDatabase {
 			i = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
 		}
 	}
 
@@ -93,7 +97,8 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -117,7 +122,8 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -129,7 +135,7 @@ public class UserDatabase {
 			}
 		}
 	}
-	
+
 	public User getUserByFirstName(String firstName) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -137,9 +143,10 @@ public class UserDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
-			u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
 			}
 			return u;
 		} catch (Exception e) {
@@ -162,7 +169,8 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -185,7 +193,8 @@ public class UserDatabase {
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
-				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
+				user.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10)));
 			}
 			return user;
 		} catch (Exception e) {
@@ -207,7 +216,8 @@ public class UserDatabase {
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
 			}
 			return u;
 		} catch (Exception e) {
@@ -271,18 +281,19 @@ public class UserDatabase {
 			}
 		}
 	}
-	
+
 	// RETRUN ARRAYLIST OF LOGIN OBJECTS WHERE PASSWORD IS GIVEN
-	public User getOneByPassword(String password) throws SQLException, Exception {
+	public User getOneByUserName(String username) throws SQLException, Exception {
 		ResultSet rs = null;
-		
+
 		try {
-			String sql = "SELECT * FROM User WHERE password=?";
+			String sql = "SELECT * FROM User WHERE userName=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setString(1, password);
+			ps.setString(1, username);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
 			}
 			return u;
 		} catch (Exception e) {
@@ -294,17 +305,40 @@ public class UserDatabase {
 			}
 		}
 	}
-	
-	//MEHTOD TO CHECK IF PASSWORD IS VALID
-	public boolean isPasswordValid(String passwd) throws Exception {
-	
-		u = this.getOneByPassword(passwd);
-	
+
+	public User getOneByPassword(String password) throws SQLException, Exception {
+		ResultSet rs = null;
+
+		try {
+			String sql = "SELECT * FROM User WHERE password=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setString(1, password);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				u = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getInt(10));
+			}
+			return u;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+
+	// MEHTOD TO CHECK IF PASSWORD IS VALID
+	public boolean isUserNameValid(String user) throws Exception {
+
+		u = this.getOneByUserName(user);
+
 		if (u != null) {
 			return true;
 		}
-	
-	return false;
-}
+
+		return false;
+	}
 
 }

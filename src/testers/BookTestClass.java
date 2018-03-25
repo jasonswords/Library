@@ -1,6 +1,8 @@
 package testers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import dataBase.BookDatabase;
 import object.Book;
 
@@ -8,7 +10,16 @@ public class BookTestClass {
 
 	public static void main(String[] args) throws Exception {
 		ArrayList<Book> book = new ArrayList<Book>();
-
+		BookDatabase bd = new BookDatabase();
+		
+		int[] r = {2,4,6,8,12,45};
+		for(int i=0;i<r.length;i++) {
+		book.add(bd.getOneBookByBookId(r[i]));
+		}
+		
+		for(Book b: book) {
+			System.out.println("\n"+b.getBookName());
+		}
 		/*
 		 * 1-createTableBook()
 		 * 2-addBook(String bookName, String author, String genre,int numOfCopies) 
@@ -23,7 +34,7 @@ public class BookTestClass {
 		 */
 
 		// WORKING CODE (SEARCH BOOK DATABASE USING KEY VALUE)
-		BookDatabase bd = new BookDatabase();
+		//BookDatabase bd = new BookDatabase();
 		
 		//METHOD 1
 //		int n = bd.createTableBook();

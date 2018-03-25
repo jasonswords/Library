@@ -7,8 +7,9 @@ public class Loan {
 	private int bookId;
 	private int userId;
 	private Date date;
-	
-	public Loan() {}
+
+	public Loan() {
+	}
 
 	public Loan(int loanId, int bookId, int userId, Date date) {
 		super();
@@ -17,7 +18,7 @@ public class Loan {
 		this.userId = userId;
 		this.date = date;
 	}
-	
+
 	public Loan(int bookId, int userId) {
 		super();
 		this.bookId = bookId;
@@ -28,16 +29,31 @@ public class Loan {
 		return loanId;
 	}
 
+	public void setLoanId(int loanId) {
+		this.loanId = loanId;
+	}
+
 	public int getBookId() {
 		return bookId;
+	}
+
+	public void setBookId(int bookId) {
+		this.bookId = bookId;
 	}
 
 	public int getUserId() {
 		return userId;
 	}
 
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
 	public Date getDate() {
 		return date;
 	}
 
+	public void setDate(Date date) {
+		this.date = date;
+	}
 }

@@ -12,7 +12,7 @@ import object.BookReservation;
 public class BookReservationDatabase {
 	private static String password = "toor";
 	private static String username = "root";
-	
+
 	ArrayList<BookReservation> bookRes;
 
 	// method for create connection
@@ -28,15 +28,15 @@ public class BookReservationDatabase {
 	}
 
 	// create table if not already created
-	public int createTableReservation() {
+	public int createTableReservation() throws SQLException, Exception {
 		int i = 0;
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS Reservation"
-					+ "("
+			String sql = "CREATE TABLE IF NOT EXISTS Reservation" 
+					+ "(" 
 					+ "reservationId INT AUTO_INCREMENT NOT NULL,"
 					+ "userId INT,"
 					+ "bookId INT," 
-					+ "PRIMARY KEY(reservationId)"
+					+ "PRIMARY KEY(reservationId)" 
 					+ ");";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			i = ps.executeUpdate();
@@ -44,7 +44,11 @@ public class BookReservationDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
-		} 
+		}finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
 	}
 
 	// method for add reservation to table
@@ -76,7 +80,7 @@ public class BookReservationDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			while(rs.next()) {
+			while (rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
 			return bookRes;
@@ -99,7 +103,7 @@ public class BookReservationDatabase {
 			ps.setInt(1, reservationId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			while(rs.next()) {
+			while (rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
 			return bookRes;
@@ -122,7 +126,7 @@ public class BookReservationDatabase {
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			while(rs.next()) {
+			while (rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
 			return bookRes;
@@ -145,7 +149,7 @@ public class BookReservationDatabase {
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
-			while(rs.next()) {
+			while (rs.next()) {
 				bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
 			}
 			return bookRes;

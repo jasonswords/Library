@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import object.Book;
 import object.Loan;
+import object.Transaction;
 
 public class LoanDatabase {
 	private static String password = "toor";
@@ -26,13 +28,13 @@ public class LoanDatabase {
 		}
 	}
 
-	public int createTableLoan() {
+	public int createTableLoan() throws SQLException, Exception {
 		int i = 0;
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS Loan"
-					+ "		("
+			String sql = "CREATE TABLE IF NOT EXISTS Loan" 
+					+ "		(" 
 					+ "		loanId INT AUTO_INCREMENT,"
-					+ "		bookId INT,"
+					+ "		bookId INT," 
 					+ "		userId INT,"
 					+ "		date DATE," 
 					+ "		PRIMARY KEY (loanId)"
@@ -43,7 +45,11 @@ public class LoanDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return i;
-		} 
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
 	}
 
 	// method for add user data in database
@@ -77,8 +83,8 @@ public class LoanDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
-			while(rs.next()) {
-				loan.add(new Loan(rs.getInt(1), rs.getInt(2),rs.getInt(3), rs.getDate(4)));
+			while (rs.next()) {
+				loan.add(new Loan(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4)));
 			}
 			return loan;
 		} catch (Exception e) {
@@ -100,8 +106,8 @@ public class LoanDatabase {
 			ps.setInt(1, loanId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
-			while(rs.next()) {
-				loan.add(new Loan(rs.getInt(1), rs.getInt(2),rs.getInt(3), rs.getDate(4)));
+			while (rs.next()) {
+				loan.add(new Loan(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4)));
 			}
 			return loan;
 		} catch (Exception e) {
@@ -115,7 +121,7 @@ public class LoanDatabase {
 	}
 
 	// method to fetch a specific piece of data by user id
-	public ArrayList<Loan> getOneByuserId(int userId) throws SQLException, Exception {
+	public ArrayList<Loan> getAllLoansByuserId(int userId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Loan WHERE userId=?";
@@ -123,8 +129,8 @@ public class LoanDatabase {
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
-			while(rs.next()) {
-				loan.add(new Loan(rs.getInt(1), rs.getInt(2),rs.getInt(3), rs.getDate(4)));
+			while (rs.next()) {
+				loan.add(new Loan(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4)));
 			}
 			return loan;
 		} catch (Exception e) {
@@ -146,8 +152,8 @@ public class LoanDatabase {
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
-			while(rs.next()) {
-				loan.add(new Loan(rs.getInt(1), rs.getInt(2),rs.getInt(3), rs.getDate(4)));
+			while (rs.next()) {
+				loan.add(new Loan(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4)));
 			}
 			return loan;
 		} catch (Exception e) {
@@ -185,13 +191,13 @@ public class LoanDatabase {
 	}
 
 	// method to delete loan with its id
-	public int deleteUserDetails(int loanId) throws SQLException, Exception {
+	public int deleteLoanDetails(int bookId) throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
-			String sql = "DELETE FROM Loan WHERE loanId=?";
+			String sql = "DELETE FROM Loan WHERE bookId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setInt(1, loanId);
+			ps.setInt(1, bookId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
@@ -203,6 +209,17 @@ public class LoanDatabase {
 				getConnection().close();
 			}
 		}
+	}
+
+	public int[] addNewLoan(Transaction t) throws Exception {
+		int[] n = new int[2];
+		n[0] = this.addLoanOfBook(t.getBookId(), t.getUserId());
+		BookDatabase bd = new BookDatabase();
+		Book b = new Book();
+		b = bd.getOneBookByBookId(t.getBookId());
+		b.setNumOfCopies(t.getNumOfCopies() - 1);
+		n[1] = bd.updateBookDetails(b);
+		return n;
 	}
 
 }

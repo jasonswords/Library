@@ -85,5 +85,11 @@ public class Transaction {
 	public String getAddress3() {
 		return user.getAddress3();
 	}
+	
+	public void executeTransaction(Book b, User u) {
+		Loan l = new Loan();
+		l.setBookId(b.getBookId());
+		l.setUserId(u.getUserId());
+	}
 
 }

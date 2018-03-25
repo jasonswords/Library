@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dataBase.BookDatabase;
+import dataBase.LoanDatabase;
 import dataBase.UserDatabase;
 import object.Book;
+import object.Loan;
+import object.Transaction;
 import object.User;
 
 public class Main {
@@ -21,18 +24,22 @@ public class Main {
 	// STANDARD USER
 	// USERNAME user
 	// PASSWORD user
-	static UserDatabase ud = new UserDatabase();
-	static BookDatabase bd = new BookDatabase();
+	static UserDatabase ud;
+	static BookDatabase bd;
+	static LoanDatabase ld;
 	static ArrayList<Book> book;
 	static ArrayList<User> user;
+	static ArrayList<Loan> l;
 	static User u;
 	static Book bk;
 
 	public static void main(String[] args) throws Exception {
-
-		User u = new User();
+		char character = '_';
+		// User u = new User();
 		Scanner scan = new Scanner(System.in);
-		boolean b = false;
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		boolean b = true;////// ------CHANGE TO TRUE TO USER PASSWORD AUTHENTICATION---------///////////
+		////////////////////////////////////////////////////////////////////////////////////////////////
 
 		do {
 			System.out.println("Login in");
@@ -47,91 +54,132 @@ public class Main {
 
 		} while (b);
 		{
-			System.out.println(" 	(1) for book");
-			System.out.println(" 	(2) for user");
-			int n = scan.nextInt();
+			while (character != 'q') {
 
-			switch (n) {
-			case 1: {
-				System.out.println(" 	(1) to view books");
-				System.out.println(" 	(2) to update book");
-				System.out.println(" 	(3) to delete book");
-				System.out.println(" 	(4) to add book");
-				System.out.println(" 	(5) to search books");
-				int v = scan.nextInt();
-				switch (v) {
-				case 1: {
-					printAllBooks();
-				}
-					break;
-				case 2: {
-						updateBookMethod();
-				}
-					break;
-				case 3: {
-					deleteBook();
-				}
-					break;
-				case 4: {
-					addToBooks();
-				}
-					break;
-				case 5: {
-					searchMethod();
-				}
-					break;
-				default: {
-					System.out.println("Incorrect entry, start again");
-				}
-					break;
-				}
+				System.out.println("");
+				System.out.println("-----Main Menu------");
+				System.out.println("");
+				System.out.println(" 	(B) for book");
+				System.out.println(" 	(U) for user");
+				System.out.println(" 	(Q) for quit");
+				character = scan.next().toLowerCase().charAt(0);
 
-			} // end book sitch case
-				break;
+				switch (character) {
+				case 'b': {
+					boolean bo = true;
+					while (bo) {
 
-			case 2: {
-				System.out.println(" 	(1) to view users");
-				System.out.println(" 	(2) to update users");
-				System.out.println(" 	(3) to delete users");
-				System.out.println(" 	(4) to add users");
-				int v = scan.nextInt();
+						System.out.println("");
+						System.out.println("-------Book Menu----------");
+						System.out.println("");
+						System.out.println(" 	(V) to view books");
+						System.out.println(" 	(U) to update book");
+						System.out.println(" 	(D) to delete book");
+						System.out.println(" 	(A) to add book");
+						System.out.println("	(B) to borrow a book");
+						System.out.println("	(R) to return a book");
+						System.out.println(" 	(S) to search books");
+						System.out.println("	(Q) to quit");
+						char v = scan.next().toLowerCase().charAt(0);
 
-				switch (v) {
-				case 1: {
-					printUsers();
-				}
-					break;
-				case 2: {
-					updateUsers();
-				}
-					break;
-				case 3: {
-					deleteUser();
-				}
-					break;
-				case 4: {
-					addUsers();
-				}
-					break;
-				}
+						switch (v) {
+						case 'v': {
+							printAllBooks();
+						}
+							break;
+						case 'u': {
+							updateBookMethod();
+						}
+							break;
+						case 'd': {
+							deleteBook();
+						}
+							break;
+						case 'a': {
+							addToBooks();
+						}
+							break;
+						case 'b': {
+							borrowBookMethod();
+						}
+							break;
+						case 'r': {
+							returnBook();
+						}
+							break;
 
-			} // end user switch case
-				break;
-			default:
-				break;
+						case 's': {
+							searchMethod();
+						}
+							break;
+						case 'q': {
+							bo = false;
+						}
+							break;
+
+						default: {
+							System.out.println("The character selected was invalid!!!");
+						}
+							break;
+						}
+
+					} // END BOOK MAIN MENU WHILE LOOP
+
+				} // END BOOK SWITCH CASE
+
+				case 'u': {
+					char v = '_';
+					while (v != 'q') {
+						System.out.println("");
+						System.out.println("---------User Menu--------------");// WILL BE ADMIN ONLY
+						System.out.println("");
+						System.out.println(" 	(V) to view users");
+						System.out.println(" 	(U) to update users");
+						System.out.println(" 	(D) to delete users");
+						System.out.println(" 	(A) to add users");
+						System.out.println(" 	(Q) to quit");
+						v = scan.next().toLowerCase().charAt(0);
+
+						switch (v) {
+						case 'v': {
+							printUsers();
+						}
+							break;
+						case 'u': {
+							updateUsers();
+						}
+							break;
+						case 'd': {
+							deleteUser();
+						}
+							break;
+						case 'a': {
+							addUsers();
+						}
+							break;
+
+						default: {
+							System.out.println("The character selected was invalid!!!");
+						}
+							break;
+
+						} // end user switch case
+					}
+				}
+				}
 			}
-
 		}
 
-		scan.close();
+		
 
 	}// END MAIN
 
-	public static boolean validatePassword(String password, String username) throws Exception {
-		boolean bool = ud.isPasswordValid(password);
+	public static boolean validatePassword(String username, String password) throws Exception {
+		ud = new UserDatabase();
+		boolean bool = ud.isUserNameValid(username);
 		if (bool) {
-			u = ud.getOneByPassword(password);
-			if (u.getUsername().equals(username)) {
+			u = ud.getOneByUserName(username);
+			if (u.getPassword().equals(password)) {
 				isLoggedIn = u.getUserId();
 				privilege = u.getPrivilege();
 				return true;
@@ -145,10 +193,6 @@ public class Main {
 		BookDatabase bd = new BookDatabase();
 		int x = bd.addBook(b);
 		return x;
-	}
-
-	public static void printBook() {
-
 	}
 
 	public static void printAllBooks() throws SQLException, Exception {
@@ -172,8 +216,8 @@ public class Main {
 
 	public static int displayBook(ArrayList<Book> bk) {
 		for (Book b : bk) {
-			System.out.print("\nBook Name: " + b.getBookName() + "\nBook Author: " + b.getAuthor() + "\nBook Genre: "
-					+ b.getGenre() + "\nNumber available: " + b.getNumOfCopies());
+			System.out.print("\nBook Id: " + b.getBookId() + "\nBook Name: " + b.getBookName() + "\nBook Author: "
+					+ b.getAuthor() + "\nBook Genre: " + b.getGenre() + "\nNumber available: " + b.getNumOfCopies());
 			System.out.println("");
 			return b.getBookId();
 		}
@@ -196,6 +240,8 @@ public class Main {
 		System.out.println("Please enter Title, Genre or Author");
 		String key = scan.next();
 		bk = new Book();
+		book = new ArrayList<>();
+		bd = new BookDatabase();
 		book = getBook(key);
 		if (!book.isEmpty()) {
 			int index = displayBook(book);
@@ -229,7 +275,7 @@ public class Main {
 
 		} else
 			System.out.println("No search results found");
-		scan.close();
+		
 	}
 
 	public static void deleteBook() throws SQLException, Exception {
@@ -241,6 +287,8 @@ public class Main {
 		System.out.println("Please enter Title, Genre or Author");
 		String key = scan.next();
 		bk = new Book();
+		book = new ArrayList<>();
+		bd = new BookDatabase();
 		book = getBook(key);
 		if (!book.isEmpty()) {
 			int index = displayBook(book);
@@ -265,7 +313,7 @@ public class Main {
 		} else {
 			System.out.println("The search returned 0 results");
 		}
-		scan.close();
+		
 	}
 
 	public static void addToBooks() throws Exception {
@@ -293,6 +341,7 @@ public class Main {
 			System.out.println("The book was added successfully");
 		System.out.println("");
 		printAllBooks();
+		
 	}
 
 	public static void searchMethod() throws SQLException, Exception {
@@ -302,16 +351,21 @@ public class Main {
 		System.out.println("Please enter Title, Genre or Author");
 		String key = scan.next();
 		bk = new Book();
+		book = new ArrayList<>();
 		book = getBook(key);
 		if (!book.isEmpty()) {
-			int index = displayBook(book);
+			displayBook(book);
+		} else {
+
 		}
+		
 	}
 
 	public static void printUsers() throws SQLException, Exception {
 		System.out.println("------ All Users----------");
 		u = new User();
 		user = new ArrayList<>();
+		ud = new UserDatabase();
 		user = ud.getAllUsers();
 		for (User o : user) {
 			System.out.println("\nUser first name: " + o.getFirstName() + "\nUser sur- name " + o.getSurName()
@@ -335,6 +389,7 @@ public class Main {
 		System.out.println("Please enter their first name");
 		String key = scan.next();
 		u = new User();
+		ud = new UserDatabase();
 		u = ud.getUserByFirstName(key);
 		if (u != null) {
 			int index = u.getUserId();
@@ -381,10 +436,9 @@ public class Main {
 			u = ud.getOneUserById(index);
 
 			printSingleUsers(u);
-
 		} else
 			System.out.println("No search results found");
-		scan.close();
+		
 	}
 
 	public static void deleteUser() throws SQLException, Exception {
@@ -396,11 +450,13 @@ public class Main {
 		System.out.println("Please enter their first name");
 		String key = scan.next();
 		u = new User();
+		ud = new UserDatabase();
 		u = ud.getUserByFirstName(key);
 		u.getUserId();
 		ud.deleteUserDetails(u.getUserId());
 		System.out.println("");
 		printUsers();
+		
 	}
 
 	public static void addUsers() throws Exception {
@@ -438,10 +494,192 @@ public class Main {
 		System.out.println("Enter privilege");
 		int privilege = scan.nextInt();
 		scan.nextLine();
-
+		ud = new UserDatabase();
 		ud.addUser(firstname, surname, add1, add2, add3, phone, username, password, privilege);
 
 		printUsers();
+		
+	}
+
+	public static void addBookToLoanTable(int id) throws SQLException, Exception {
+		ld = new LoanDatabase();
+		bd = new BookDatabase();
+		ud = new UserDatabase();
+		Transaction t = new Transaction();
+		t.setBook(bd.getOneBookByBookId(id));
+		t.setUser(ud.getOneUserById(isLoggedIn));
+		int[] arr = ld.addNewLoan(t);
+		if (arr[0] == 1 || arr[1] == 1) {
+			System.out.println("");
+			System.out.println("The book is added to your account successfully !!");
+		} else {
+			System.out.println("");
+			System.out.println("An error occured while writing to the database");
+		} // END ELSE STATEMENT
+	}
+
+	public static void borrowBookMethod() throws SQLException, Exception {
+		Scanner scan = new Scanner(System.in);
+		boolean bol = true;
+		while (bol) {
+
+			System.out.println("");
+			System.out.println("---- Borrow Book --------");
+			System.out.println("");
+			printAllBooks();
+			System.out.println("");
+			System.out.println("Please choose a book to borrow");
+			System.out.println("You can search by title, genre or author");
+			System.out.println("Enter search value");
+			String key = scan.next();
+			bd = new BookDatabase();
+			book = new ArrayList<>();
+			book = bd.searchBooks(key);
+			if (book.size() == 1) {
+				bk = new Book();
+				bk = book.get(0);
+				System.out.println("");
+				displayBook(bk);
+				System.out.println("");
+				System.out.println("Is this the book ??");
+				System.out.println("		Y for yes");
+				System.out.println("		N for no");
+				String zx = scan.next().toLowerCase();
+				char xc = zx.charAt(0);
+				if (xc == 'y') {
+
+					addBookToLoanTable(bk.getBookId());
+
+				} // END IF STATEMENT
+
+			} // END IF STATEMENT
+			else {
+				boolean y = true;
+
+				while (y) {
+					displayBook(book);
+					System.out.println("");
+					System.out.println(book.size());
+					System.out.println(" ----- Multiple results-----------");
+					System.out.println("Plaese choose which book you want");
+					System.out.println("Please input the id of the book");
+					for (Book b1 : book) {
+						System.out.println("\nBook name: " + b1.getBookName() + "\nBook id: " + b1.getBookId());
+						System.out.println("");
+					}
+
+					System.out.println("Please input book id of book you want");
+					int id = scan.nextInt();
+					bk = new Book();
+					System.out.println("");
+					bk = bd.getOneBookByBookId(id);
+					displayBook(bk);
+					System.out.println("");
+					System.out.println("Is this the book you want ?");
+					System.out.println("");
+					System.out.println(" 	Y for yes");
+					System.out.println(" 	N for no");
+					String c = scan.next().toLowerCase();
+					char m = c.charAt(0);
+					if (m == 'y') {
+						addBookToLoanTable(id);
+						y = false;
+					} else {
+						y = true;
+
+					} // END ELSE STATEMENT
+				} // END INNER WHILE LOOP
+			} // END IF STATEMENT
+
+			System.out.println("Loan another book");
+			System.out.println("		Y for yes");
+			System.out.println("		N for no");
+			String s = scan.next().toLowerCase();
+			char k = s.charAt(0);
+			bol = (k == 'y') ? true : false;
+			
+		}
+	}
+
+	public static void returnBook() throws SQLException, Exception {
+		Scanner scan = new Scanner(System.in);
+		char k = 'y';
+		while (k != 'n') {
+			System.out.println("");
+			System.out.println("------Return Book----------");
+			System.out.println("");
+			System.out.println("");
+			l = new ArrayList<Loan>();
+			ld = new LoanDatabase();
+			bd = new BookDatabase();
+			book = new ArrayList<>();
+			char s = 'n';
+			while (s != 'y') {
+				l = ld.getAllLoansByuserId(isLoggedIn);
+
+				displayBookByIndex(l);
+
+				System.out.println("");
+				System.out.println("Please input the id of the book to return");
+				int id = scan.nextInt();
+				bk = new Book();
+				bk = bd.getOneBookByBookId(id);
+				displayBook(bk);
+				System.out.println("");
+				System.out.println("Is this the book you are retyrning ?");
+				System.out.println("		Y for yes");
+				System.out.println("		N for no");
+				s = scan.next().toLowerCase().charAt(0);
+			} // end while loop
+
+			if (s == 'y') {
+				int d = bk.getBookId();
+				int n = ld.deleteLoanDetails(d);
+				bk = new Book();
+				bk = bd.getOneBookByBookId(d);
+				bk.setNumOfCopies(bk.getNumOfCopies() +1);
+				bd.updateBookDetails(bk);
+				System.out.println("");
+				if (n == 1) {
+					System.out.println("The book has been removed from the account");
+					System.out.println("");
+				} else {
+					System.out.println("An error occured while removing the book from the database");
+					System.out.println("");
+				}
+			} else {
+				System.out.println("");
+				System.out.println("An error has occured");
+				System.out.println("");
+			}
+
+			System.out.println("Return another book");
+			System.out.println("		Y for yes");
+			System.out.println("		N for no");
+			k = scan.next().toLowerCase().charAt(0);
+		} // END WHILE LOOP
+		
+
+	}
+
+	public static int[] getBookIndexes(ArrayList<Loan> l) {
+		int[] index = new int[l.size()];
+		for (int i = 0; i < l.size(); i++) {
+			index[i] = l.get(i).getBookId();
+		}
+		return index;
+	}
+
+	public static void displayBookByIndex(ArrayList<Loan> l) throws SQLException, Exception {
+		bd = new BookDatabase();
+		int[] index = getBookIndexes(l);
+		for (int i = 0; i < index.length; i++) {
+			book.add(bd.getOneBookByBookId(index[i]));
+		}
+		for (Book b : book) {
+			System.out.println("\nBookName" + b.getBookName() + "\nBook Id: " + b.getBookId());
+			System.out.println("");
+		}
 	}
 
 }// END CLASS

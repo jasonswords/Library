@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import object.Book;
 
 public class BookDatabase {
@@ -29,17 +31,17 @@ public class BookDatabase {
 	}
 
 	// create the book tale if not already created
-	public int createTableBook() {
+	public int createTableBook() throws SQLException, Exception {
 		int i = 0;
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS Book" 
-					+"("
+			String sql = "CREATE TABLE IF NOT EXISTS Book"
+					+ "(" 
 					+ "bookId INT AUTO_INCREMENT NOT NULL,"
-					+ "bookName varchar(255),"
+					+ "bookName varchar(255)," 
 					+ "author varchar(255)," 
-					+ "genre varchar(255)," 
+					+ "genre varchar(255),"
 					+ "numOfCopies INT,"
-					+ "PRIMARY KEY(bookId)"
+					+ "PRIMARY KEY(bookId)" 
 					+ ");";
 
 			PreparedStatement ps = getConnection().prepareStatement(sql);
@@ -48,7 +50,11 @@ public class BookDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
-		} 
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
 	}
 
 	// method for add book data in database
@@ -56,8 +62,7 @@ public class BookDatabase {
 		this.createTableBook();// create table if it does not already exist.
 		int i = 0;
 		try {
-			String sql = "INSERT INTO Book (bookName, author, genre, numOfCopies)" 
-						+ " VALUES (?,?,?,?)";
+			String sql = "INSERT INTO Book (bookName, author, genre, numOfCopies)" + " VALUES (?,?,?,?)";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setString(1, bookName);
 			ps.setString(2, author);
@@ -74,35 +79,34 @@ public class BookDatabase {
 			}
 		}
 	}
-	
+
 	// ADD BOOK OBJECT TO DATABASE-- METHOD TAKES IN BOOK OBJECT
-		public int addBook(Book b) throws Exception {
-			String bookName = b.getBookName();
-			String author = b.getAuthor();
-			String genre = b.getGenre();
-			int numOfCopies = b.getNumOfCopies();
-			// CREATE TABLE IF NOT ALREADY CREATED
-			this.createTableBook();
-			int i = 0;
-			try {
-				String sql = "INSERT INTO Book (bookName, author, genre, numOfCopies)" 
-							+ " VALUES (?,?,?,?)";
-				PreparedStatement ps = getConnection().prepareStatement(sql);
-				ps.setString(1, bookName);
-				ps.setString(2, author);
-				ps.setString(3, genre);
-				ps.setInt(4, numOfCopies);
-				i = ps.executeUpdate();
-				return i;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return -1;
-			} finally {
-				if (getConnection() != null) {
-					getConnection().close();
-				}
+	public int addBook(Book b) throws Exception {
+		String bookName = b.getBookName();
+		String author = b.getAuthor();
+		String genre = b.getGenre();
+		int numOfCopies = b.getNumOfCopies();
+		// CREATE TABLE IF NOT ALREADY CREATED
+		this.createTableBook();
+		int i = 0;
+		try {
+			String sql = "INSERT INTO Book (bookName, author, genre, numOfCopies)" + " VALUES (?,?,?,?)";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setString(1, bookName);
+			ps.setString(2, author);
+			ps.setString(3, genre);
+			ps.setInt(4, numOfCopies);
+			i = ps.executeUpdate();
+			return i;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
 			}
 		}
+	}
 
 	// method to fetch data from book
 	public ArrayList<Book> getAllBooks() throws SQLException, Exception {
@@ -128,7 +132,7 @@ public class BookDatabase {
 
 	// method to fetch a specific piece of data by book name
 	public ArrayList<Book> getOneByName(String key) throws SQLException, Exception {
-		String bookName = "%"+key+"%";
+		String bookName = "%" + key + "%";
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Book WHERE bookName LIKE ?";
@@ -152,7 +156,7 @@ public class BookDatabase {
 
 	// method to fetch a specific piece of data by author
 	public ArrayList<Book> getOneByAuthor(String key) throws SQLException, Exception {
-		String author = "%"+key+"%";
+		String author = "%" + key + "%";
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Book WHERE author LIKE ?";
@@ -175,18 +179,18 @@ public class BookDatabase {
 	}
 
 	// method to fetch a specific piece of data by book id
-	public ArrayList<Book> getOneByBookId(int bookId) throws SQLException, Exception {
+	public Book getOneByBookId(int bookId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Book WHERE bookId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
-			book = new ArrayList<>();
+			b = new Book();
 			while (rs.next()) {
-				book.add(new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
+				b = new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
 			}
-			return book;
+			return b;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -196,7 +200,7 @@ public class BookDatabase {
 			}
 		}
 	}
-	
+
 	public Book getOneBookByBookId(int bookId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
@@ -204,7 +208,7 @@ public class BookDatabase {
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				b = new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
 			}
@@ -232,6 +236,30 @@ public class BookDatabase {
 			ps.setString(3, genre);
 			ps.setInt(4, numOfCopies);
 			ps.setInt(5, bookId);
+			i = ps.executeUpdate();
+			return i;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 1;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+
+	// method to update book information
+	public int updateBookDetails(Book b) throws SQLException, Exception {
+		getConnection().setAutoCommit(false);
+		int i = 0;
+		try {
+			String sql = "UPDATE Book SET bookName=?,author=?,genre=?,numOfCopies=? WHERE bookId=?";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setString(1, b.getBookName());
+			ps.setString(2, b.getAuthor());
+			ps.setString(3, b.getGenre());
+			ps.setInt(4, b.getNumOfCopies());
+			ps.setInt(5, b.getBookId());
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
