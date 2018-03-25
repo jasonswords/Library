@@ -56,7 +56,7 @@ public class BookReservationDatabase {
 		this.createTableReservation();// create table if it does not already exist.
 		int i = 0;
 		try {
-			String sql = "INSERT INTO Reservation (bookId, userId)" + " VALUES (?,?)";
+			String sql = "INSERT INTO Reservation (userId, bookId)" + " VALUES (?,?)";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			ps.setInt(2, bookId);

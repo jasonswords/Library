@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dataBase.BookDatabase;
+import dataBase.BookReservationDatabase;
 import dataBase.LoanDatabase;
 import dataBase.UserDatabase;
 import object.Book;
+import object.BookReservation;
 import object.Loan;
 import object.Transaction;
 import object.User;
@@ -170,8 +172,6 @@ public class Main {
 			}
 		}
 
-		
-
 	}// END MAIN
 
 	public static boolean validatePassword(String username, String password) throws Exception {
@@ -275,7 +275,7 @@ public class Main {
 
 		} else
 			System.out.println("No search results found");
-		
+
 	}
 
 	public static void deleteBook() throws SQLException, Exception {
@@ -313,7 +313,7 @@ public class Main {
 		} else {
 			System.out.println("The search returned 0 results");
 		}
-		
+
 	}
 
 	public static void addToBooks() throws Exception {
@@ -341,7 +341,7 @@ public class Main {
 			System.out.println("The book was added successfully");
 		System.out.println("");
 		printAllBooks();
-		
+
 	}
 
 	public static void searchMethod() throws SQLException, Exception {
@@ -358,7 +358,7 @@ public class Main {
 		} else {
 
 		}
-		
+
 	}
 
 	public static void printUsers() throws SQLException, Exception {
@@ -438,7 +438,7 @@ public class Main {
 			printSingleUsers(u);
 		} else
 			System.out.println("No search results found");
-		
+
 	}
 
 	public static void deleteUser() throws SQLException, Exception {
@@ -456,7 +456,7 @@ public class Main {
 		ud.deleteUserDetails(u.getUserId());
 		System.out.println("");
 		printUsers();
-		
+
 	}
 
 	public static void addUsers() throws Exception {
@@ -498,7 +498,7 @@ public class Main {
 		ud.addUser(firstname, surname, add1, add2, add3, phone, username, password, privilege);
 
 		printUsers();
-		
+
 	}
 
 	public static void addBookToLoanTable(int id) throws SQLException, Exception {
@@ -547,9 +547,10 @@ public class Main {
 				String zx = scan.next().toLowerCase();
 				char xc = zx.charAt(0);
 				if (xc == 'y') {
-
-					addBookToLoanTable(bk.getBookId());
-
+					if (bk.getNumOfCopies() == 0) {
+						reserveBook(bk.getBookId());
+					} else
+						addBookToLoanTable(bk.getBookId());
 				} // END IF STATEMENT
 
 			} // END IF STATEMENT
@@ -582,7 +583,10 @@ public class Main {
 					String c = scan.next().toLowerCase();
 					char m = c.charAt(0);
 					if (m == 'y') {
-						addBookToLoanTable(id);
+						if (bk.getNumOfCopies() == 0) {
+							reserveBook(id);
+						} else
+							addBookToLoanTable(id);
 						y = false;
 					} else {
 						y = true;
@@ -597,7 +601,7 @@ public class Main {
 			String s = scan.next().toLowerCase();
 			char k = s.charAt(0);
 			bol = (k == 'y') ? true : false;
-			
+
 		}
 	}
 
@@ -637,7 +641,7 @@ public class Main {
 				int n = ld.deleteLoanDetails(d);
 				bk = new Book();
 				bk = bd.getOneBookByBookId(d);
-				bk.setNumOfCopies(bk.getNumOfCopies() +1);
+				bk.setNumOfCopies(bk.getNumOfCopies() + 1);
 				bd.updateBookDetails(bk);
 				System.out.println("");
 				if (n == 1) {
@@ -658,7 +662,6 @@ public class Main {
 			System.out.println("		N for no");
 			k = scan.next().toLowerCase().charAt(0);
 		} // END WHILE LOOP
-		
 
 	}
 
@@ -679,6 +682,41 @@ public class Main {
 		for (Book b : book) {
 			System.out.println("\nBookName" + b.getBookName() + "\nBook Id: " + b.getBookId());
 			System.out.println("");
+		}
+	}
+
+	public static void reserveBook(int bookId) throws Exception {
+		Scanner scan = new Scanner(System.in);
+
+		System.out.println("");
+		System.out.println("------ Reserve Book-----------");
+		System.out.println("");
+		System.out.println("Unfortunately this book is not availoable");
+		System.out.println("today.");
+		System.out.println("");
+		System.out.println("Would you like to reseve this book ?");
+		System.out.println("");
+		System.out.println("		Y for yes");
+		System.out.println("		N for no");
+		char a = scan.next().toLowerCase().charAt(0);
+		if (a == 'y') {
+			BookReservationDatabase brd = new BookReservationDatabase();
+			ArrayList<BookReservation> res = new ArrayList<>();
+			res = brd.getOneByuserId(isLoggedIn);
+			if (!res.isEmpty()) {
+				for (BookReservation r : res) {
+					if (bookId == r.getBookId()) {
+						System.out.println("This book is already reserved !!!");
+						System.out.println("");
+					} else
+						brd.reserveBook(isLoggedIn, bookId);
+				}
+			} else {
+				brd.reserveBook(isLoggedIn, bookId);
+				System.out.println("");
+				System.out.println("This book has been reserved for you");
+				System.out.println("");
+			}
 		}
 	}
 

@@ -9,17 +9,7 @@ public class LoanTesterClass {
 	static LoanDatabase ld;
 	static ArrayList<Loan> l;
 
-	public static String getPattern(int n) {
-		String str = "?,";
-		for(int i=0;i<n-1;i++) {
-			str += "?,";
-		}
-		return str;
-	}
-
 	public static void main(String[] args) throws Exception {
-
-		System.out.println(getPattern(4));
 
 		/*
 		 * 

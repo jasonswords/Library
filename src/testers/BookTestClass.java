@@ -1,7 +1,6 @@
 package testers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import dataBase.BookDatabase;
 import object.Book;
@@ -12,14 +11,6 @@ public class BookTestClass {
 		ArrayList<Book> book = new ArrayList<Book>();
 		BookDatabase bd = new BookDatabase();
 		
-		int[] r = {2,4,6,8,12,45};
-		for(int i=0;i<r.length;i++) {
-		book.add(bd.getOneBookByBookId(r[i]));
-		}
-		
-		for(Book b: book) {
-			System.out.println("\n"+b.getBookName());
-		}
 		/*
 		 * 1-createTableBook()
 		 * 2-addBook(String bookName, String author, String genre,int numOfCopies) 
@@ -98,13 +89,13 @@ public class BookTestClass {
 //			System.out.println("successful   =  "+n);
 		
 		//METHOD 9
-		book = bd.searchBooks("black");
-
-		for (Book b : book) {
-			System.out.println("Book id: " + b.getBookId() + "\nBook name: " + b.getBookName() + "\nBook author: "
-					+ b.getAuthor() + "\nBook genre: " + b.getGenre() + "\nBook number of copies: " + b.getNumOfCopies()
-					+ "\n" + "\n");
-		 }
+//		book = bd.searchBooks("black");
+//
+//		for (Book b : book) {
+//			System.out.println("Book id: " + b.getBookId() + "\nBook name: " + b.getBookName() + "\nBook author: "
+//					+ b.getAuthor() + "\nBook genre: " + b.getGenre() + "\nBook number of copies: " + b.getNumOfCopies()
+//					+ "\n" + "\n");
+//		 }
 
 	}// END MAIN
 
