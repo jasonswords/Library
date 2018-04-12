@@ -211,13 +211,15 @@ public class LoanDatabase {
 		}
 	}
 
-	public int[] addNewLoan(Transaction t) throws Exception {
+	public int[] addNewLoan(int bookId, int userId) throws Exception {
+		userId =1;//set user id for testing----must be removed
+		System.out.println("Book id: "+bookId+"/nUser id "+userId);
 		int[] n = new int[2];
-		n[0] = this.addLoanOfBook(t.getBookId(), t.getUserId());
+		n[0] = this.addLoanOfBook(bookId, userId);
 		BookDatabase bd = new BookDatabase();
 		Book b = new Book();
-		b = bd.getOneBookByBookId(t.getBookId());
-		b.setNumOfCopies(t.getNumOfCopies() - 1);
+		b = bd.getOneByBookId(bookId);
+		b.setNumOfCopies(b.getNumOfCopies() -1);
 		n[1] = bd.updateBookDetails(b);
 		return n;
 	}

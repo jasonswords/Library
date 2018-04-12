@@ -5,9 +5,7 @@ public class User {
 	private int userId;
 	private String firstName;
 	private String surName;
-	private String address1;
-	private String address2;
-	private String address3;
+	private String address;
 	private String phone;
 	private String username;
 	private String password;
@@ -16,29 +14,25 @@ public class User {
 	public User() {
 	}
 
-	public User(String firstName, String surName, String address1, String address2, String address3, String phone,
-			String username, String password, int privilege) {
+	public User(String firstName, String surName, String address, String phone, String username, String password,
+			int privilege) {
 		super();
 		this.firstName = firstName;
 		this.surName = surName;
-		this.address1 = address1;
-		this.address2 = address2;
-		this.address3 = address3;
+		this.address = address;
 		this.phone = phone;
 		this.username = username;
 		this.password = password;
 		this.privilege = privilege;
 	}
 
-	public User(int userId, String firstName, String surName, String address1, String address2, String address3,
-			String phone, String username, String password, int privilege) {
+	public User(int userId, String firstName, String surName, String address, String phone, String username,
+			String password, int privilege) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
 		this.surName = surName;
-		this.address1 = address1;
-		this.address2 = address2;
-		this.address3 = address3;
+		this.address = address;
 		this.phone = phone;
 		this.username = username;
 		this.password = password;
@@ -65,28 +59,12 @@ public class User {
 		this.surName = surName;
 	}
 
-	public String getAddress1() {
-		return address1;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAddress1(String address1) {
-		this.address1 = address1;
-	}
-
-	public String getAddress2() {
-		return address2;
-	}
-
-	public void setAddress2(String address2) {
-		this.address2 = address2;
-	}
-
-	public String getAddress3() {
-		return address3;
-	}
-
-	public void setAddress3(String address3) {
-		this.address3 = address3;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getPhone() {

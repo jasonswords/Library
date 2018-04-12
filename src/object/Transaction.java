@@ -74,16 +74,8 @@ public class Transaction {
 		return user.getPhone();
 	}
 
-	public String getAddress1() {
-		return user.getAddress1();
-	}
-
-	public String getAddress2() {
-		return user.getAddress2();
-	}
-
-	public String getAddress3() {
-		return user.getAddress3();
+	public String getAddress() {
+		return user.getAddress();
 	}
 	
 	public void executeTransaction(Book b, User u) {

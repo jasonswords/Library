@@ -200,28 +200,30 @@ public class BookDatabase {
 			}
 		}
 	}
+	
+	
 
-	public Book getOneBookByBookId(int bookId) throws SQLException, Exception {
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT * FROM Book WHERE bookId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setInt(1, bookId);
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				b = new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
-			}
-			return b;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
-			}
-		}
-	}
+//	public Book getOneBookByBookId(int bookId) throws SQLException, Exception {
+//		ResultSet rs = null;
+//		try {
+//			String sql = "SELECT * FROM Book WHERE bookId=?";
+//			PreparedStatement ps = getConnection().prepareStatement(sql);
+//			ps.setInt(1, bookId);
+//			rs = ps.executeQuery();
+//
+//			while (rs.next()) {
+//				b = new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+//			}
+//			return b;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		} finally {
+//			if (getConnection() != null) {
+//				getConnection().close();
+//			}
+//		}
+//	}
 
 	// method to update book information
 	public int updateBookDetails(String bookName, String author, String genre, int numOfCopies, int bookId)
@@ -320,4 +322,32 @@ public class BookDatabase {
 			}
 		}
 	}
+	
+	// method to search table for specific book ids
+		public boolean searchIfIdExists(int bookId) throws SQLException, Exception {
+			ResultSet rs = null;
+			try {
+				String sql = "SELECT * FROM Book WHERE bookId=?";
+				PreparedStatement ps = getConnection().prepareStatement(sql);
+				ps.setInt(1, bookId);
+				rs = ps.executeQuery();
+				b = new Book();
+				while (rs.next()) {
+					b = new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5));
+				}
+				if(b != null) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			} finally {
+				if (getConnection() != null) {
+					getConnection().close();
+				}
+			}
+		}
 }
