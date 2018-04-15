@@ -191,13 +191,14 @@ public class LoanDatabase {
 	}
 
 	// method to delete loan with its id
-	public int deleteLoanDetails(int bookId) throws SQLException, Exception {
+	public int deleteLoanDetails(int bookId, int userId) throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
-			String sql = "DELETE FROM Loan WHERE bookId=?";
+			String sql = "DELETE FROM Loan WHERE bookId=? AND userId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
+			ps.setInt(2, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
@@ -212,14 +213,23 @@ public class LoanDatabase {
 	}
 
 	public int[] addNewLoan(int bookId, int userId) throws Exception {
-		userId =1;//set user id for testing----must be removed
-		System.out.println("Book id: "+bookId+"/nUser id "+userId);
 		int[] n = new int[2];
 		n[0] = this.addLoanOfBook(bookId, userId);
 		BookDatabase bd = new BookDatabase();
 		Book b = new Book();
 		b = bd.getOneByBookId(bookId);
 		b.setNumOfCopies(b.getNumOfCopies() -1);
+		n[1] = bd.updateBookDetails(b);
+		return n;
+	}
+	
+	public int[] removeLoanOfBook(int bookId, int userId) throws Exception {
+		int[] n = new int[2];
+		n[0] = this.deleteLoanDetails(bookId, userId);
+		BookDatabase bd = new BookDatabase();
+		Book b = new Book();
+		b = bd.getOneByBookId(bookId);
+		b.setNumOfCopies(b.getNumOfCopies() +1);
 		n[1] = bd.updateBookDetails(b);
 		return n;
 	}

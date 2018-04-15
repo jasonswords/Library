@@ -17,9 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import dataBase.BookDatabase;
@@ -31,7 +30,6 @@ import object.BookReservation;
 import object.Loan;
 import object.User;
 import testers.GUICommunication;
-import javax.swing.SwingConstants;
 
 public class MemberHomeScreen extends JFrame {
 
@@ -42,14 +40,15 @@ public class MemberHomeScreen extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private JTextField textField;
+	private JOptionPane pane;
 	DefaultTableModel model;
 	JLabel lblNewLabel;
 	Object[] rowData;
 	JButton btnThisBook;
 	ArrayList<Book> book;
-	ArrayList<Loan> l;
-	LoanDatabase ld;
-	BookDatabase bd;
+	static ArrayList<Loan> l;
+	static LoanDatabase ld;
+	static BookDatabase bd;
 
 	/**
 	 * Launch the application.
@@ -61,18 +60,12 @@ public class MemberHomeScreen extends JFrame {
 					MemberHomeScreen frame = new MemberHomeScreen(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					errorMessage("Error, Problem opening the application");
 				}
 			}
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 * 
-	 * @throws Exception
-	 * @throws SQLException
-	 */
 	public MemberHomeScreen(ArrayList<Book> book) throws SQLException, Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(150, 45, 1100, 650);
@@ -81,22 +74,19 @@ public class MemberHomeScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+////////////////////////////////////////////////////////////////////////////////////////////  JSCROLLPANE AROUND JTABLE ////////////////
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(291, 231, 766, 391);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(table);
 
+////////////////////////////////////////////////////////////////////////////////////////////  CREATE JTABLE AND TABLE MODEL  ////////////////
 		String[] col = { "Book ID", "Title", "Author", "Genre", "Number Available" };
 		model = new DefaultTableModel(col, 0);
-		table = new JTable(model);
-		table.getModel().addTableModelListener(new TableModelListener() {
-
-			public void tableChanged(TableModelEvent e) {
-			}
-		});
-
+		table = new JTable(model);	
 		scrollPane.setViewportView(table);
-
+		
+////////////////////////////////////////////////////////////////////////////////////////////  LOG OUT BUTTON  ////////////////
 		JButton btnLogOut = new JButton("Log Out");
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -110,156 +100,134 @@ public class MemberHomeScreen extends JFrame {
 		btnLogOut.setBounds(31, 24, 248, 61);
 		contentPane.add(btnLogOut);
 
+////////////////////////////////////////////////////////////////////////////////////////////  RETURN BOOK BUTTON  ////////////////
 		JButton btnNewButton = new JButton("Return Book");
 		btnNewButton.setFont(new Font("Calibri", Font.PLAIN, 24));
 		btnNewButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
-				int id = GUICommunication.getLoggedIn();
 				ArrayList<Book> book = new ArrayList<Book>();
 				try {
-					book = GUICommunication.getBookFromLoan(id);
+					book = GUICommunication.getBookFromLoan();
 					if (book.isEmpty()) {
-						JOptionPane.showConfirmDialog(null, "You currently have no books to return", "Information",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+						errorMessage("Currently no books to return");
 					} else if (book.size() == 1) {
-						displayBooks(book);
+						displayBooks(book, 0);
 						if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
 								JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 							LoanDatabase ld = new LoanDatabase();
-							ld.deleteLoanDetails(book.get(0).getBookId());
+							ld.removeLoanOfBook(book.get(0).getBookId(), GUICommunication.getLoggedIn());
+							book = new ArrayList<>();
+							book = GUICommunication.getBookFromLoan();
+							displayBooks(book, 0);
+							errorMessage("The book was successfully removed");
 						} else {
-							JOptionPane.showConfirmDialog(null, "The book was not removed", "Information",
-									JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+							errorMessage("Error, the book was not removed \nfrom the database");
+							pane.setVisible(false);
 						}
-
 					} else {
-						displayBooks(book);
+						displayBooks(book, 0);
 						String s = "";
 						do {
-							s = JOptionPane.showInputDialog(null, "Please input the book ID?");
-							if (s == null) {
-								break;
+							s = JOptionPane.showInputDialog(null, "Please input a valid book ID?");
+							if(s == null || (s != null && ("".equals(s))))   
+							{
+							    throw new Exception();
 							}
-						} while (!parseString(s));
+						} while (!parseString(s) || !isBookAlreadyOnLoanTable(Integer.parseInt(s)));
 						int n = Integer.parseInt(s);
 						LoanDatabase ld = new LoanDatabase();
-						l = new ArrayList<>();
-						l = ld.getOneByBookId(n);
-						if (l.isEmpty()) {
-							JOptionPane.showConfirmDialog(null, "Invalid ID", "Invalid ID", JOptionPane.DEFAULT_OPTION,
-									JOptionPane.PLAIN_MESSAGE);
+						int[] val = ld.removeLoanOfBook(n, GUICommunication.getLoggedIn());
+						if (val[0] == 1 && val[1] == 1) {
+							displayBooks(GUICommunication.getBookFromLoan(), 0);
+							errorMessage("The book was successfully removed");
 						} else {
-							if (JOptionPane.showConfirmDialog(null, "Return this book ID " + n, "WARNING",
-									JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-								ld = new LoanDatabase();
-								ld.deleteLoanDetails(n);
-								book = GUICommunication.getBookFromLoan(id);
-								displayBooks(book);
-							} else {
-								JOptionPane.showConfirmDialog(null, "The book was not returned", "Information",
-										JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-							}
-
+							errorMessage("Error, Problem writing to the database");
 						}
-
 					}
 				} catch (Exception e1) {
 				}
-
 			}
 		});
 		btnNewButton.setBounds(17, 296, 248, 70);
 		contentPane.add(btnNewButton);
 
+////////////////////////////////////////////////////////////////////////////////////////////  LOAN A BOOK BUTTON  ////////////////
 		JButton btnBorrowBook = new JButton("Loan a Book");
 		btnBorrowBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ArrayList<Book> book = new ArrayList<>();
+				BookDatabase bd = new BookDatabase();
+				try {
+					book = bd.getAllBooks();
+					displayBooks(book, 1);
+				} catch (Exception e3) {
+					errorMessage("Error, Problem reading from the database");
+				}
 				String s = "";
 				do {
 					s = JOptionPane.showInputDialog(null, "Please input the book ID?");
-					if (s == null) {
-						break;
+					if(s == null || (s != null && ("".equals(s))))   
+					{
+							try {
+								throw new Exception();
+							} catch (Exception e1) {
+								break;
+							}
 					}
-				} while (!parseString(s));
+				} while (!parseString(s) || !isBookIdValid(allBooks(), Integer.parseInt(s)));
 				int n = Integer.parseInt(s);
 				bd = new BookDatabase();
+				ld = new LoanDatabase();
+				Book b = new Book();
 				try {
-					if (!bd.searchIfIdExists(n)) {
-						System.out.println(bd.searchIfIdExists(n));
-						ld = new LoanDatabase();
-						Book b = new Book();
-						try {
-							b = bd.getOneByBookId(n);
-							displayBooks(b);
-							if (b.getNumOfCopies() > 0) {
-								try {
-									ArrayList<Loan> l = new ArrayList<>();
-									l = ld.getAllLoansByuserId(GUICommunication.getLoggedIn());
-									boolean alreadyOnLoan = true;
-									for (Loan loan : l) {
-										if (loan.getBookId() == n) {
-											alreadyOnLoan = false;
-										}
-									}
-									if (alreadyOnLoan) {
-										ld.addNewLoan(b.getBookId(), GUICommunication.getLoggedIn());
-									} else {
-										JOptionPane.showConfirmDialog(null, "Book already on loan", "Loan",
-												JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-									}
-								} catch (Exception e1) {
-
-								}
-							} else {
-								if (JOptionPane.showConfirmDialog(null,
-										"This book is currently unavailable\nWould you like to reserve it ? ") == JOptionPane.YES_OPTION) {
-									BookReservationDatabase br = new BookReservationDatabase();
-									ArrayList<BookReservation> r = new ArrayList<>();
-									r = br.getOneByuserId(GUICommunication.getLoggedIn());
-									if (r.isEmpty()) {
-										br.reserveBook(GUICommunication.getLoggedIn(), b.getBookId());
-										JOptionPane.showConfirmDialog(null,
-												"The book " + b.getBookName() + " has been reserved");
-									} else {
-										boolean alreadyReserved = false;
-										for (BookReservation v : r) {
-											if (n == v.getBookId()) {
-												alreadyReserved = true;
-											}
-										}
-										if (alreadyReserved) {
-											// JOptionPane.(null, "This book is already reserved for you");
-											JOptionPane.showConfirmDialog(null, "Book already reserved", "Reservation",
-													JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-										} else {
-											br.reserveBook(GUICommunication.getLoggedIn(), n);
-										}
-
-									}
-								} else {
-									JOptionPane.showConfirmDialog(null, "Please choose another book", "Unavailable",
-											JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
-								}
-							}
-
-						} catch (Exception e2) {
+					b = bd.getOneByBookId(n);
+					displayBooks(b);
+					if (b.getNumOfCopies() > 0) {
+						if (!isBookAlreadyOnLoanTable(n)) {
+							int[] n1 = ld.addNewLoan(b.getBookId(), GUICommunication.getLoggedIn());
+							if (n1[0] == 1 && n1[1] == 1) {
+								 errorMessage("The book was successfully added");
+							} else
+								 errorMessage("Error, Problem reading from the database");
+						} else {
+							errorMessage("Book already on loan");
 						}
 					} else {
-						JOptionPane.showConfirmDialog(null, "The id does not exist", "Invalid ID",
-								JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (JOptionPane.showConfirmDialog(null, "This book is currently unavailable\\nWould you like to reserve it ? ") == JOptionPane.YES_OPTION) {
+							BookReservationDatabase br = new BookReservationDatabase();
+							ArrayList<BookReservation> r = new ArrayList<>();
+							r = br.getOneByuserId(GUICommunication.getLoggedIn());
+							if (r.isEmpty()) {
+								br.reserveBook(GUICommunication.getLoggedIn(), b.getBookId());
+								JOptionPane.showConfirmDialog(null,
+										"The book " + b.getBookName() + " has been reserved");
+							} else {
+								boolean alreadyReserved = false;
+								for (BookReservation v : r) {
+									if (n == v.getBookId()) {
+										alreadyReserved = true;
+									}
+								}
+								if (alreadyReserved) {
+									errorMessage("Book already reserved");
+								} else {
+									br.reserveBook(GUICommunication.getLoggedIn(), n);
+								}
+							}
+						} else {
+							errorMessage("Book already reserved");
+						}
 					}
-
-				} catch (Exception e1) {
-					JOptionPane.showConfirmDialog(null, "Invalid ID", "Invalid ID", JOptionPane.DEFAULT_OPTION,
-							JOptionPane.PLAIN_MESSAGE);
+				} catch (Exception e2) {
 				}
 			}
-
 		});
 		btnBorrowBook.setFont(new Font("Calibri", Font.PLAIN, 24));
 		btnBorrowBook.setBounds(17, 378, 248, 61);
 		contentPane.add(btnBorrowBook);
 
+/////////////////////////////////////////////////////////////////////////////////////////////  SEARCH INPUT TEXT FIELD  ////////////////
 		textField = new JTextField("Name/Author/Genre");
 		textField.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
 		textField.setBackground(Color.LIGHT_GRAY);
@@ -267,27 +235,24 @@ public class MemberHomeScreen extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 
+/////////////////////////////////////////////////////////////////////////////////////////////  SEARCH BOOKS BUTTON  ////////////////
 		JButton btnSearchBooks = new JButton("Search Books");
 		btnSearchBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				String key = textField.getText();
-
 				try {
-					if (!key.equals("Name/Author/Genre")) {
-						ArrayList<Book> book = GUICommunication.searchMethod(key);
+					if (!key.isEmpty()) {
+						ArrayList<Book> book = new ArrayList<>();
+						book = GUICommunication.searchMethod(key);
 						if (book.isEmpty()) {
-							JOptionPane.showConfirmDialog(null, "No results found", "Information",
-									JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+							errorMessage("No results found");
 						} else
-							displayBooks(book);
+							displayBooks(book, 0);
 					} else {
-						ArrayList<Book> book = bd.getAllBooks();
-						displayBooks(book);
+						displayBooks(null, 1);
 					}
 				} catch (Exception e1) {
-					JOptionPane.showConfirmDialog(null, "Unknown problem occurred", "Information",
-							JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+					errorMessage("Unknown problem occurred");
 				}
 			}
 		});
@@ -295,6 +260,7 @@ public class MemberHomeScreen extends JFrame {
 		btnSearchBooks.setBounds(689, 146, 292, 61);
 		contentPane.add(btnSearchBooks);
 
+/////////////////////////////////////////////////////////////////////////////////////////////  DISPLAY LOGGED IN USER NAME  ////////////////
 		UserDatabase ud = new UserDatabase();
 		User u = new User();
 		u = ud.getOneUserById(GUICommunication.getLoggedIn());
@@ -310,6 +276,7 @@ public class MemberHomeScreen extends JFrame {
 		lblNewLabel.setBounds(778, 29, 316, 54);
 		contentPane.add(lblNewLabel);
 
+/////////////////////////////////////////////////////////////////////////////////////////////  MEMBERS AREA LABEL  ////////////////
 		JLabel lblMembersArea = new JLabel("Members Area");
 		lblMembersArea.setOpaque(true);
 		lblMembersArea.setHorizontalAlignment(SwingConstants.CENTER);
@@ -319,18 +286,21 @@ public class MemberHomeScreen extends JFrame {
 		lblMembersArea.setBounds(454, 6, 235, 61);
 		contentPane.add(lblMembersArea);
 
+/////////////////////////////////////////////////////////////////////////////////////////////  DISPLAY BACKGROUND IMAGE  ////////////////
 		JLabel Label3 = new JLabel("New label");
 		Label3.setIcon(new ImageIcon(Main.class.getResource("/images/Untitled.jpg")));
 		Label3.setBounds(0, 0, 1100, 650);
 		contentPane.add(Label3);
 	}
 
-	/**
-	 * 
-	 * @param book
-	 *            .. Takes in ArrayList of Book objects and displays in JTable
-	 */
-	public void displayBooks(ArrayList<Book> book) {
+	//display arraylist of books on j table
+	public void displayBooks(ArrayList<Book> bookList, int n) throws SQLException, Exception {
+		ArrayList<Book> b1 = new ArrayList<>();
+		if (n == 1) {
+			bd = new BookDatabase();
+			b1 = bd.getAllBooks();
+		} else
+			b1 = bookList;
 		model.setRowCount(0);
 		table.getColumnModel().getColumn(0).setPreferredWidth(5);
 		table.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -338,21 +308,17 @@ public class MemberHomeScreen extends JFrame {
 		table.getColumnModel().getColumn(3).setPreferredWidth(5);
 		table.getColumnModel().getColumn(4).setPreferredWidth(5);
 		rowData = new Object[5];
-		for (int i = 0; i < book.size(); i++) {
-			rowData[0] = book.get(i).getBookId();
-			rowData[1] = book.get(i).getBookName();
-			rowData[2] = book.get(i).getAuthor();
-			rowData[3] = book.get(i).getGenre();
-			rowData[4] = book.get(i).getNumOfCopies();
+		for (int i = 0; i < b1.size(); i++) {
+			rowData[0] = b1.get(i).getBookId();
+			rowData[1] = b1.get(i).getBookName();
+			rowData[2] = b1.get(i).getAuthor();
+			rowData[3] = b1.get(i).getGenre();
+			rowData[4] = b1.get(i).getNumOfCopies();
 			model.addRow(rowData);
 		}
 	}
-
-	/**
-	 * 
-	 * @param book
-	 *            ..Takes in Book object and displays in JTable
-	 */
+	
+	//display a single book on j table
 	public void displayBooks(Book book) {
 		model.setRowCount(0);
 		table.getColumnModel().getColumn(0).setPreferredWidth(5);
@@ -369,12 +335,7 @@ public class MemberHomeScreen extends JFrame {
 		model.addRow(rowData);
 	}
 
-	/**
-	 * 
-	 * @param s
-	 *            String. Method tests if string can be parsed to an integer
-	 * @return true if possible, false if not
-	 */
+	//validate integer
 	public boolean parseString(String s) {
 		try {
 			Integer.parseInt(s);
@@ -382,5 +343,46 @@ public class MemberHomeScreen extends JFrame {
 		} catch (Exception ex) {
 			return false;
 		}
+	}
+
+	//display error message
+	public static void errorMessage(String s) {
+		JOptionPane.showConfirmDialog(null, s, "Information", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+	}
+
+	//validate bookid exists in array
+	public boolean isBookIdValid(ArrayList<Book> b, int bookId) {
+		for (Book book : b) {
+			if (book.getBookId() == bookId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//return arraylist of all the books in database
+	public static ArrayList<Book> allBooks() {
+		bd = new BookDatabase();
+		try {
+			return bd.getAllBooks();
+		} catch (SQLException e) {
+			errorMessage("Error, Problem reading from the database");
+		} catch (Exception e) {
+			errorMessage("Error, Something went wrong");
+		}
+		return null;
+	}
+
+	//check if book is already on loan table
+	public static boolean isBookAlreadyOnLoanTable(int bookId) throws SQLException, Exception {
+		ld = new LoanDatabase();
+		ArrayList<Loan> loan = new ArrayList<>();
+		loan = ld.getAllLoansByuserId(GUICommunication.getLoggedIn());
+		for (Loan l : loan) {
+			if (l.getBookId() == bookId) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
