@@ -20,7 +20,7 @@ import object.User;
 
 public class GUICommunication {
 
-	static int isLoggedIn =1;
+	static int isLoggedIn;
 	static int privilege;
 	static UserDatabase ud;
 	static BookDatabase bd;
@@ -292,7 +292,7 @@ public class GUICommunication {
 		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate today = LocalDate.now();
 		long days = ChronoUnit.DAYS.between(localDate, today);
-		return days > 3;
+		return days > 1;
 	}
 
 	public static void errorMessage(String error) {

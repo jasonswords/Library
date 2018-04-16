@@ -68,9 +68,6 @@ public class SearchResults extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(102, 117, 913, 450);
 		contentPane.add(scrollPane);
-		for (Book b : book) {
-			System.out.println(b.getBookName());
-		}
 
 		String[] col = { "Book ID", "Title", "Author", "Genre", "Number Available" };
 		DefaultTableModel model = new DefaultTableModel(col, 0);
