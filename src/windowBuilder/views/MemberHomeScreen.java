@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,12 +37,12 @@ public class MemberHomeScreen extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
+	private static JTable table;
 	private JTextField textField;
 	private JOptionPane pane;
-	DefaultTableModel model;
+	static DefaultTableModel model;
 	JLabel lblNewLabel;
-	Object[] rowData;
+	static Object[] rowData;
 	JButton btnThisBook;
 	ArrayList<Book> book;
 	static ArrayList<Loan> l;
@@ -59,6 +58,7 @@ public class MemberHomeScreen extends JFrame {
 				try {
 					MemberHomeScreen frame = new MemberHomeScreen(null);
 					frame.setVisible(true);
+					GUICommunication.displayMessageIfBooksAreLate();
 				} catch (Exception e) {
 					errorMessage("Error, Problem opening the application");
 				}
@@ -74,19 +74,16 @@ public class MemberHomeScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-////////////////////////////////////////////////////////////////////////////////////////////  JSCROLLPANE AROUND JTABLE ////////////////
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(291, 231, 766, 391);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(table);
 
-////////////////////////////////////////////////////////////////////////////////////////////  CREATE JTABLE AND TABLE MODEL  ////////////////
 		String[] col = { "Book ID", "Title", "Author", "Genre", "Number Available" };
 		model = new DefaultTableModel(col, 0);
-		table = new JTable(model);	
+		table = new JTable(model);
 		scrollPane.setViewportView(table);
-		
-////////////////////////////////////////////////////////////////////////////////////////////  LOG OUT BUTTON  ////////////////
+
 		JButton btnLogOut = new JButton("Log Out");
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -100,7 +97,6 @@ public class MemberHomeScreen extends JFrame {
 		btnLogOut.setBounds(31, 24, 248, 61);
 		contentPane.add(btnLogOut);
 
-////////////////////////////////////////////////////////////////////////////////////////////  RETURN BOOK BUTTON  ////////////////
 		JButton btnNewButton = new JButton("Return Book");
 		btnNewButton.setFont(new Font("Calibri", Font.PLAIN, 24));
 		btnNewButton.addActionListener(new ActionListener() {
@@ -130,9 +126,9 @@ public class MemberHomeScreen extends JFrame {
 						String s = "";
 						do {
 							s = JOptionPane.showInputDialog(null, "Please input a valid book ID?");
-							if(s == null || (s != null && ("".equals(s))))   
-							{
-							    throw new Exception();
+							if (s == null || (s != null && ("".equals(s)))) {
+//								throw new Exception();
+								break;
 							}
 						} while (!parseString(s) || !isBookAlreadyOnLoanTable(Integer.parseInt(s)));
 						int n = Integer.parseInt(s);
@@ -152,74 +148,13 @@ public class MemberHomeScreen extends JFrame {
 		btnNewButton.setBounds(17, 296, 248, 70);
 		contentPane.add(btnNewButton);
 
-////////////////////////////////////////////////////////////////////////////////////////////  LOAN A BOOK BUTTON  ////////////////
 		JButton btnBorrowBook = new JButton("Loan a Book");
 		btnBorrowBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<Book> book = new ArrayList<>();
-				BookDatabase bd = new BookDatabase();
 				try {
-					book = bd.getAllBooks();
-					displayBooks(book, 1);
-				} catch (Exception e3) {
-					errorMessage("Error, Problem reading from the database");
-				}
-				String s = "";
-				do {
-					s = JOptionPane.showInputDialog(null, "Please input the book ID?");
-					if(s == null || (s != null && ("".equals(s))))   
-					{
-							try {
-								throw new Exception();
-							} catch (Exception e1) {
-								break;
-							}
-					}
-				} while (!parseString(s) || !isBookIdValid(allBooks(), Integer.parseInt(s)));
-				int n = Integer.parseInt(s);
-				bd = new BookDatabase();
-				ld = new LoanDatabase();
-				Book b = new Book();
-				try {
-					b = bd.getOneByBookId(n);
-					displayBooks(b);
-					if (b.getNumOfCopies() > 0) {
-						if (!isBookAlreadyOnLoanTable(n)) {
-							int[] n1 = ld.addNewLoan(b.getBookId(), GUICommunication.getLoggedIn());
-							if (n1[0] == 1 && n1[1] == 1) {
-								 errorMessage("The book was successfully added");
-							} else
-								 errorMessage("Error, Problem reading from the database");
-						} else {
-							errorMessage("Book already on loan");
-						}
-					} else {
-						if (JOptionPane.showConfirmDialog(null, "This book is currently unavailable\\nWould you like to reserve it ? ") == JOptionPane.YES_OPTION) {
-							BookReservationDatabase br = new BookReservationDatabase();
-							ArrayList<BookReservation> r = new ArrayList<>();
-							r = br.getOneByuserId(GUICommunication.getLoggedIn());
-							if (r.isEmpty()) {
-								br.reserveBook(GUICommunication.getLoggedIn(), b.getBookId());
-								JOptionPane.showConfirmDialog(null,
-										"The book " + b.getBookName() + " has been reserved");
-							} else {
-								boolean alreadyReserved = false;
-								for (BookReservation v : r) {
-									if (n == v.getBookId()) {
-										alreadyReserved = true;
-									}
-								}
-								if (alreadyReserved) {
-									errorMessage("Book already reserved");
-								} else {
-									br.reserveBook(GUICommunication.getLoggedIn(), n);
-								}
-							}
-						} else {
-							errorMessage("Book already reserved");
-						}
-					}
-				} catch (Exception e2) {
+					loanBookMethod();
+				} catch (Exception e1) {
+					
 				}
 			}
 		});
@@ -227,7 +162,6 @@ public class MemberHomeScreen extends JFrame {
 		btnBorrowBook.setBounds(17, 378, 248, 61);
 		contentPane.add(btnBorrowBook);
 
-/////////////////////////////////////////////////////////////////////////////////////////////  SEARCH INPUT TEXT FIELD  ////////////////
 		textField = new JTextField("Name/Author/Genre");
 		textField.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
 		textField.setBackground(Color.LIGHT_GRAY);
@@ -235,7 +169,6 @@ public class MemberHomeScreen extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 
-/////////////////////////////////////////////////////////////////////////////////////////////  SEARCH BOOKS BUTTON  ////////////////
 		JButton btnSearchBooks = new JButton("Search Books");
 		btnSearchBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -260,7 +193,6 @@ public class MemberHomeScreen extends JFrame {
 		btnSearchBooks.setBounds(689, 146, 292, 61);
 		contentPane.add(btnSearchBooks);
 
-/////////////////////////////////////////////////////////////////////////////////////////////  DISPLAY LOGGED IN USER NAME  ////////////////
 		UserDatabase ud = new UserDatabase();
 		User u = new User();
 		u = ud.getOneUserById(GUICommunication.getLoggedIn());
@@ -276,7 +208,6 @@ public class MemberHomeScreen extends JFrame {
 		lblNewLabel.setBounds(778, 29, 316, 54);
 		contentPane.add(lblNewLabel);
 
-/////////////////////////////////////////////////////////////////////////////////////////////  MEMBERS AREA LABEL  ////////////////
 		JLabel lblMembersArea = new JLabel("Members Area");
 		lblMembersArea.setOpaque(true);
 		lblMembersArea.setHorizontalAlignment(SwingConstants.CENTER);
@@ -286,15 +217,31 @@ public class MemberHomeScreen extends JFrame {
 		lblMembersArea.setBounds(454, 6, 235, 61);
 		contentPane.add(lblMembersArea);
 
-/////////////////////////////////////////////////////////////////////////////////////////////  DISPLAY BACKGROUND IMAGE  ////////////////
-		JLabel Label3 = new JLabel("New label");
-		Label3.setIcon(new ImageIcon(Main.class.getResource("/images/Untitled.jpg")));
-		Label3.setBounds(0, 0, 1100, 650);
-		contentPane.add(Label3);
+		JButton btnReservedBooks = new JButton("Reserved Books");
+		btnReservedBooks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayReservedBooks();
+			}
+		});
+		btnReservedBooks.setBounds(72, 486, 160, 47);
+		contentPane.add(btnReservedBooks);
+
+		JButton btnNewButton_1 = new JButton("Un-reserve book");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					unReserveBook();
+				}catch(Exception ev) {
+					
+				}
+			}
+		});
+		btnNewButton_1.setBounds(72, 545, 160, 44);
+		contentPane.add(btnNewButton_1);
 	}
 
-	//display arraylist of books on j table
-	public void displayBooks(ArrayList<Book> bookList, int n) throws SQLException, Exception {
+	// display arraylist of books on j table
+	public static void displayBooks(ArrayList<Book> bookList, int n) throws SQLException, Exception {
 		ArrayList<Book> b1 = new ArrayList<>();
 		if (n == 1) {
 			bd = new BookDatabase();
@@ -317,9 +264,9 @@ public class MemberHomeScreen extends JFrame {
 			model.addRow(rowData);
 		}
 	}
-	
-	//display a single book on j table
-	public void displayBooks(Book book) {
+
+	// display a single book on j table
+	public static void displayBook(Book book) {
 		model.setRowCount(0);
 		table.getColumnModel().getColumn(0).setPreferredWidth(5);
 		table.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -335,8 +282,8 @@ public class MemberHomeScreen extends JFrame {
 		model.addRow(rowData);
 	}
 
-	//validate integer
-	public boolean parseString(String s) {
+	// validate integer
+	public static boolean parseString(String s) {
 		try {
 			Integer.parseInt(s);
 			return true;
@@ -345,13 +292,13 @@ public class MemberHomeScreen extends JFrame {
 		}
 	}
 
-	//display error message
+	// display error message
 	public static void errorMessage(String s) {
 		JOptionPane.showConfirmDialog(null, s, "Information", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
 	}
 
-	//validate bookid exists in array
-	public boolean isBookIdValid(ArrayList<Book> b, int bookId) {
+	// validate bookid exists in array
+	public static boolean isBookIdValid(ArrayList<Book> b, int bookId) {
 		for (Book book : b) {
 			if (book.getBookId() == bookId) {
 				return true;
@@ -360,7 +307,7 @@ public class MemberHomeScreen extends JFrame {
 		return false;
 	}
 
-	//return arraylist of all the books in database
+	// return arraylist of all the books in database
 	public static ArrayList<Book> allBooks() {
 		bd = new BookDatabase();
 		try {
@@ -373,7 +320,7 @@ public class MemberHomeScreen extends JFrame {
 		return null;
 	}
 
-	//check if book is already on loan table
+	// check if book is already on loan table
 	public static boolean isBookAlreadyOnLoanTable(int bookId) throws SQLException, Exception {
 		ld = new LoanDatabase();
 		ArrayList<Loan> loan = new ArrayList<>();
@@ -384,5 +331,111 @@ public class MemberHomeScreen extends JFrame {
 			}
 		}
 		return false;
+	}
+
+	public static boolean displayReservedBooks() {
+		ArrayList<BookReservation> reserved = new ArrayList<>();
+		ArrayList<Book> book = new ArrayList<>();
+		BookReservationDatabase brd = new BookReservationDatabase();
+		BookDatabase bd = new BookDatabase();
+		try {
+			reserved = brd.getAllReservationsByUserId(GUICommunication.getLoggedIn());
+			if (!reserved.isEmpty()) {
+				for (BookReservation br : reserved) {
+					book.add(bd.getOneByBookId(br.getBookId()));
+				}
+				displayBooks(book, 0);
+				return true;
+			} else {
+				errorMessage("Currnetly no books reserved");
+				return false;
+			}
+
+		} catch (Exception e1) {
+			errorMessage("Error, Problem reading reserved books from database");
+		}
+		return false;
+	}
+
+	public static void loanBookMethod() throws Exception {
+		ArrayList<Book> book = new ArrayList<>();
+		BookDatabase bd = new BookDatabase();
+		try {
+			book = bd.getAllBooks();
+			displayBooks(book, 1);
+		} catch (Exception e3) {
+			errorMessage("Error, Problem reading from the database");
+		}
+		String s = "";
+		do {
+			s = JOptionPane.showInputDialog(null, "Please input the book ID?");
+			if (s == null || (s != null && ("".equals(s)))) {
+				throw new Exception();
+			}
+		} while (!parseString(s) || !isBookIdValid(allBooks(), Integer.parseInt(s)));
+		int n = Integer.parseInt(s);
+		bd = new BookDatabase();
+		ld = new LoanDatabase();
+		Book b = new Book();
+		try {
+			b = bd.getOneByBookId(n);
+			displayBook(b);
+			if (b.getNumOfCopies() > 0) {
+				if (!isBookAlreadyOnLoanTable(n)) {
+					int[] n1 = ld.addNewLoan(b.getBookId(), GUICommunication.getLoggedIn());
+					if (n1[0] == 1 && n1[1] == 1) {
+						errorMessage("The book was successfully added");
+					} else
+						errorMessage("Error, Problem reading from the database");
+				} else {
+					errorMessage("Book already on loan");
+				}
+			} else {
+				if (JOptionPane.showConfirmDialog(null,
+						"This book is currently unavailable\nWould you like to reserve it ? ") == JOptionPane.YES_OPTION) {
+					BookReservationDatabase br = new BookReservationDatabase();
+					ArrayList<BookReservation> r = new ArrayList<>();
+					r = br.getOneByuserId(GUICommunication.getLoggedIn());
+					if (r.isEmpty()) {
+						br.reserveBook(GUICommunication.getLoggedIn(), b.getBookId());
+						errorMessage("The book " + b.getBookName() + " has been reserved");
+					} else {
+						boolean alreadyReserved = false;
+						for (BookReservation v : r) {
+							if (n == v.getBookId()) {
+								alreadyReserved = true;
+							}
+						}
+						if (alreadyReserved) {
+							errorMessage("Book already reserved");
+						} else {
+							br.reserveBook(GUICommunication.getLoggedIn(), n);
+						}
+					}
+				}
+			}
+		} catch (Exception e2) {
+		}
+	}
+
+	public static void unReserveBook(){
+		if (displayReservedBooks()) {
+			String input = "";
+			try {
+				do {
+					input = JOptionPane.showInputDialog(null, "Please input the ID of book to un-reserve",
+							"Un-Reserve Book");
+					if (input == null || (input != null && ("".equals(input)))) {
+							throw new Exception();
+					}
+				} while (!GUICommunication.validateUnreserveBookId(input));
+				int bookId = Integer.parseInt(input);
+				BookReservationDatabase brd = new BookReservationDatabase();
+				brd.deleteReservation(bookId, GUICommunication.getLoggedIn());
+				displayReservedBooks();
+			} catch (Exception e1) {
+			
+			}
+		}
 	}
 }

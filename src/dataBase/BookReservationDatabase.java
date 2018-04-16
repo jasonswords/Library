@@ -93,6 +93,29 @@ public class BookReservationDatabase {
 			}
 		}
 	}
+	
+	// method to fetch data from reservation table
+		public ArrayList<BookReservation> getAllReservationsByUserId(int userId) throws SQLException, Exception {
+			ResultSet rs = null;
+			try {
+				String sql = "SELECT * FROM Reservation WHERE userId=?";
+				PreparedStatement ps = getConnection().prepareStatement(sql);
+				ps.setInt(1, userId);
+				rs = ps.executeQuery();
+				bookRes = new ArrayList<BookReservation>();
+				while (rs.next()) {
+					bookRes.add(new BookReservation(rs.getInt(1), rs.getInt(2), rs.getInt(3)));
+				}
+				return bookRes;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			} finally {
+				if (getConnection() != null) {
+					getConnection().close();
+				}
+			}
+		}
 
 	// method to fetch a specific piece of data by reservation id
 	public ArrayList<BookReservation> getOneByReservationId(int reservationId) throws SQLException, Exception {
@@ -188,13 +211,14 @@ public class BookReservationDatabase {
 	}
 
 	// method to delete reservation by id
-	public int deleteReservation(int reservationId) throws SQLException, Exception {
+	public int deleteReservation(int bookId, int userId) throws SQLException, Exception {
 		getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
-			String sql = "DELETE FROM Reservation WHERE reservationId=?";
+			String sql = "DELETE FROM Reservation WHERE bookId=? AND userId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setInt(1, reservationId);
+			ps.setInt(1, bookId);
+			ps.setInt(2, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {

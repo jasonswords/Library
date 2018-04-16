@@ -19,6 +19,7 @@ import object.Book;
 import testers.GUICommunication;
 
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -134,6 +135,7 @@ public class SearchResults extends JFrame {
 		txtSearchAgain.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
 		txtSearchAgain.setText("Search Again");
 		txtSearchAgain.setBackground(Color.LIGHT_GRAY);
+		txtSearchAgain.setHorizontalAlignment(SwingConstants.CENTER);
 		txtSearchAgain.setBounds(414, 17, 288, 41);
 		contentPane.add(txtSearchAgain);
 		txtSearchAgain.setColumns(10);

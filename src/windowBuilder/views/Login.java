@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import testers.GUICommunication;
@@ -55,13 +56,15 @@ public class Login extends JFrame {
 		JLabel Label1 = new JLabel("Member Login");
 		Label1.setForeground(Color.WHITE);
 		Label1.setFont(new Font("AR DARLING", Font.BOLD, 65));
+		Label1.setHorizontalAlignment(SwingConstants.CENTER);
 		Label1.setBounds(330, 120, 549, 91);
 		getContentPane().add(Label1);
 
-		JLabel Label2 = new JLabel("   Welcome");
+		JLabel Label2 = new JLabel("Welcome");
 		Label2.setForeground(Color.WHITE);
 		Label2.setFont(new Font("Calibri", Font.BOLD, 53));
-		Label2.setBounds(391, 213, 621, 58);
+		Label2.setHorizontalAlignment(SwingConstants.CENTER);
+		Label2.setBounds(258, 223, 621, 58);
 		getContentPane().add(Label2);
 
 		JButton Button1 = new JButton("Login");
@@ -111,7 +114,8 @@ public class Login extends JFrame {
 		txtEnterUsername = new JTextField();
 		txtEnterUsername.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
 		txtEnterUsername.setBackground(Color.LIGHT_GRAY);
-		txtEnterUsername.setText("          Enter Username");
+		txtEnterUsername.setText("Enter Username");
+		txtEnterUsername.setHorizontalAlignment(SwingConstants.CENTER);
 		txtEnterUsername.setBounds(351, 283, 446, 43);
 		getContentPane().add(txtEnterUsername);
 		txtEnterUsername.setColumns(10);
@@ -119,6 +123,7 @@ public class Login extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setToolTipText("Enter Password");
 		passwordField.setBackground(Color.LIGHT_GRAY);
+		passwordField.setHorizontalAlignment(SwingConstants.CENTER);
 		passwordField.setBounds(351, 355, 446, 43);
 		getContentPane().add(passwordField);
 

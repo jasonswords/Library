@@ -29,9 +29,6 @@ import java.awt.event.FocusEvent;
 
 public class AdminHomeScreen extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
@@ -48,9 +45,7 @@ public class AdminHomeScreen extends JFrame {
 	private JTextField textField;
 	private JLabel label1, label2, label3, label4, label5, label6, label7, label8;
 	private JTextField textField_1, textField_2, textField_3, textField_4, textField_5, textField_6, textField_7;
-	private int id;
-	private String[] userLabels = { "Member ID", "First Name", "Sur-name", "Address", "Phone Number", "UserName",
-			"Password", "Privilege" };
+	private String[] userLabels = { "Member ID", "First Name", "Sur-name", "Address", "Phone Number", "UserName","Password", "Privilege" };
 	private String[] bookLabels = { "Book ID", "Title", "Author", "Genre", "Number Available" };
 	private JButton btnViewAllBooks;
 	private JTable table_1;
@@ -104,8 +99,7 @@ public class AdminHomeScreen extends JFrame {
 				initialiseUserLabel(userLabels, "Add Member");
 				textField.setVisible(false);
 				label1.setVisible(false);
-				clearTextFields();
-				
+				clearTextFields();	
 			}
 		});
 		btnAddMember.setBounds(23, 195, 146, 29);
@@ -119,7 +113,7 @@ public class AdminHomeScreen extends JFrame {
 				try {
 					displayMemberInformation("edited", "Edit Member");
 				} catch (Exception e1) {
-					errorMessage("Error, problem opening internal window");
+					//errorMessage("Error, problem opening internal window");
 				}
 			}
 		});
@@ -130,11 +124,12 @@ public class AdminHomeScreen extends JFrame {
 		JButton btnDeleteMember = new JButton("Delete Member");// main frame button
 		btnDeleteMember.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				clearTextFields();
 				initialiseUserLabel(userLabels, "Delete Member");
 				try {
 					displayMemberInformation("deleted", "Delete Member");
 				} catch (Exception e1) {
-					errorMessage("Error, Problem opening internal window");
+					//errorMessage("Error, Problem opening internal window");
 				}
 			}
 		});
@@ -259,6 +254,7 @@ public class AdminHomeScreen extends JFrame {
 					if (JOptionPane.showConfirmDialog(null, "Are you sure") == JOptionPane.YES_OPTION) {
 						ud = new UserDatabase();
 						try {
+							int id = Integer.parseInt(textField.getText());
 							ud.deleteUserDetails(id);
 							internalFrame.doDefaultCloseAction();
 							user = new ArrayList<>();
@@ -277,39 +273,8 @@ public class AdminHomeScreen extends JFrame {
 								textField_3.getText(), textField_4.getText(), textField_5.getText(),
 								textField_6.getText(), textField_7.getText() };
 					try {
-						int c = GUICommunication.editUser(array);
-						switch (c) {
-						case 0: {
-							if (JOptionPane.showConfirmDialog(null, "Are you sure") == JOptionPane.YES_OPTION) {
-								int x = GUICommunication.proceedWithEdit(array);
-								if (x == 1) {
-									displayAllUsers();
-									internalFrame.doDefaultCloseAction();
-									errorMessage("The changes were saved successfully");
-								} else {
-									errorMessage("Error saving to the database");
-								}
-							} else
-								errorMessage("No changes were saved");
-							break;
-						}
-						case -1: {
-							errorMessage("Please fill in all fields");
-							break;
-						}
-						case -2: {
-							errorMessage("Privilege must be\\n1 for member\\n2 for admin");
-							break;
-						}
-						case -3: {
-							errorMessage("Please enter a valid integer value");
-							break;
-						}
-						default: {
-							errorMessage("");
-							break;
-						}
-						}
+						int b = GUICommunication.editUser(array);
+						displayReturn(b);
 					}catch (Exception e1) {
 							errorMessage("No changes were saved");
 						}
@@ -319,10 +284,7 @@ public class AdminHomeScreen extends JFrame {
 							textField_4.getText() };
 					try {
 						int b = GUICommunication.addBook(array);
-						if (b == 6) {
-							displayAllBooks();
-							internalFrame.doDefaultCloseAction();
-						}
+						displayReturn(b);
 					} catch (Exception e1) {
 						errorMessage("Error adding new book to database");
 					}
@@ -332,22 +294,16 @@ public class AdminHomeScreen extends JFrame {
 							textField_4.getText() };
 					try {
 						int b = GUICommunication.editBook(array);
-						if (b == 5) {
-							displayAllUsers();
-							internalFrame.doDefaultCloseAction();
-						}
+						displayReturn(b);
 					} catch (Exception e1) {
-						errorMessage("Error, Problem writing data to database");
+						errorMessage("Error, Problem writing new data to database");
 					}			
 	/////////////////////////////////////////////////////////////////////////////////////  INNER DELETE BOOK BUTTON  /////////////////////////////				
 				} else if (e.getActionCommand().equals("Delete Book")) {
 					String s = textField.getText();
 					try {
 						int b = GUICommunication.deleteBook(s);
-						if (b == 5) {
-							displayAllUsers();
-							internalFrame.doDefaultCloseAction();
-						}
+						displayReturn(b);
 					} catch (Exception e1) {
 						errorMessage("Error, Problem deleting book in database");
 					}
@@ -380,6 +336,7 @@ public class AdminHomeScreen extends JFrame {
 		JButton btnAddBook = new JButton("Add Book");
 		btnAddBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				clearTextFields();
 				initialiseBookLabel(bookLabels,"Add Book");
 			}
 		});
@@ -389,6 +346,8 @@ public class AdminHomeScreen extends JFrame {
 		JButton btnEditBook = new JButton("Edit Book");
 		btnEditBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				displayAllBooks();
+				clearTextFields();
 				initialiseBookLabel(bookLabels,"Edit Book");
 				textField.setVisible(true);
 				label1.setVisible(true);
@@ -405,6 +364,8 @@ public class AdminHomeScreen extends JFrame {
 		JButton btnDeleteBook = new JButton("Delete Book");
 		btnDeleteBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				displayAllBooks();
+				clearTextFields();
 				initialiseBookLabel(bookLabels, "Delete Book");
 				textField.setVisible(true);
 				label1.setVisible(true);
@@ -464,19 +425,18 @@ public class AdminHomeScreen extends JFrame {
 
 	//get and validate information for editing and deleting books
 	public void getValidInformation(String state, String buttonState) throws SQLException, Exception {
+		internalFrame.setVisible(false);
 		clearTextFields();
-		JOptionPane pane;
 		String input = "";
 		int id =0;
 		do {
-			pane = new JOptionPane();
+			displayAllBooks();
 			input = JOptionPane.showInputDialog(null, "Please input the ID of book to be "+state, buttonState);
 			if(input == null || (input != null && ("".equals(input))))   
 			{
 			    throw new Exception();
 			}
 		} while (!GUICommunication.isBookIdVallid(input));
-		if (pane.isEnabled() == true) {
 			try {
 				id = Integer.parseInt(input);
 				bd = new BookDatabase();
@@ -495,8 +455,6 @@ public class AdminHomeScreen extends JFrame {
 			} catch (Exception e1) {
 				errorMessage("Error occurred with retrieving user information");
 			}
-		}
-
 	}
 	
 	//display all books in j table
@@ -571,6 +529,7 @@ public class AdminHomeScreen extends JFrame {
 	// delete member from system
 		public void displayMemberInformation(String state, String buttonState) throws SQLException, Exception {
 			displayAllUsers();//display all users in table
+			internalFrame.setVisible(false);
 			clearTextFields();//clear all text fields
 			String input = "";
 			int id = 0;//Initialize values 
@@ -677,5 +636,26 @@ public class AdminHomeScreen extends JFrame {
 	public static void errorMessage(String error) {
 		JOptionPane.showConfirmDialog(null, error, "Information", JOptionPane.DEFAULT_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	public void displayReturn(int b) {
+		switch(b) {
+		case 0:{
+			displayAllBooks();
+			errorMessage("The operation has been successfull !!!");
+			internalFrame.doDefaultCloseAction();
+			break;
+		}case -1:{
+			errorMessage("Error occurred writing to database");break;
+		}case -2:{
+			errorMessage("Please input valid number of bookd\nMust be greater than 0\nLess than 100");break;
+		}case -3:{
+			errorMessage("Error, Please complete all fields");break;
+		}case -4:{
+			errorMessage("Please eneter a valid integer value");break;
+		}default:{
+			errorMessage("Error, Problem has occurred");break;
+		}
+		}
 	}
 }

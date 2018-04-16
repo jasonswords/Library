@@ -21,6 +21,10 @@ import testers.GUICommunication;
 
 public class Main extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtSearchByTitle;
 	JLabel label;
@@ -61,10 +65,10 @@ public class Main extends JFrame {
 
 		txtSearchByTitle = new JTextField();
 		txtSearchByTitle.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		txtSearchByTitle.setText(" Search by Title of the Book,Author or Genre");
+		txtSearchByTitle.setText("Search by Title of the Book,Author or Genre");
+		txtSearchByTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		txtSearchByTitle.setBackground(Color.LIGHT_GRAY);
 		txtSearchByTitle.setBounds(241, 267, 656, 41);
-		// textField.setBounds(247, 257, 86, 20);
 		contentPane.add(txtSearchByTitle);
 		txtSearchByTitle.setColumns(10);
 

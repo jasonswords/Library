@@ -1,18 +1,26 @@
 package testers;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.JOptionPane;
 
 import dataBase.BookDatabase;
+import dataBase.BookReservationDatabase;
 import dataBase.LoanDatabase;
 import dataBase.UserDatabase;
 import object.Book;
+import object.BookReservation;
 import object.Loan;
 import object.User;
 
 public class GUICommunication {
 
-	static int isLoggedIn = 1;
+	static int isLoggedIn =1;
 	static int privilege;
 	static UserDatabase ud;
 	static BookDatabase bd;
@@ -33,18 +41,18 @@ public class GUICommunication {
 
 	// VALIDATE LOGIN DETAILS
 	public static int validatePassword(String username, char[] pass) throws Exception {
+		bd = new BookDatabase();
+		ud = new UserDatabase();
 		String password = String.valueOf(pass);
 		if (username != null && pass != null) {
-			ud = new UserDatabase();
-			boolean bool = ud.isUserNameValid(username);
-			if (bool) {
+			if (ud.isUserNameValid(username)) {
 				u = new User();
 				u = ud.getOneByUserName(username);
 				if (password.equals(u.getPassword())) {
 					isLoggedIn = u.getUserId();
 					privilege = u.getPrivilege();
-					return u.getPrivilege();
 				}
+				return u.getPrivilege();
 			}
 		}
 		return -1;
@@ -62,22 +70,21 @@ public class GUICommunication {
 
 	// VALIDATE ARRAY BEFORE ADDING TO DATABASE
 	public static int addBook(String[] array) throws Exception {
-		int numOfCopies = 0;
-		try {
-			numOfCopies = Integer.parseInt(array[array.length - 1]);
+		if (isStringValid(array[array.length - 1])) {
 			if (isNullValues(array)) {
-				b = new Book(array[0], array[1], array[2], numOfCopies);
-				int c = addBookToDatabase(b);
-				if (c == -1) {
-					return 0;
+				if (isNumberOfCopiesValid(Integer.parseInt(array[array.length - 1]))) {
+					b = new Book(array[0], array[1], array[2], Integer.parseInt(array[array.length - 1]));
+					int c = addBookToDatabase(b);
+					if (c == 1) {
+						return 0;
+					} else
+						return -1;
 				} else
-					return -1;
+					return -2;
 			} else
-				return -1;
-
-		} catch (Exception e) {
-			return -1;
-		}
+				return -3;
+		} else
+			return -4;
 	}
 
 	// RETURN ARRAY OF BOOK BOOKIDS
@@ -117,23 +124,23 @@ public class GUICommunication {
 
 	// VALIDATE INFORMATION BEFORE ASKING IF THEY WANT TO CONTINUE
 	public static int editBook(String[] array) throws SQLException, Exception {
-		int id = Integer.parseInt(array[0]), numberOfCopies = 0;
 		if (isStringValid(array[array.length - 1])) {
-			if (isNumberOfCopiesValid(numberOfCopies = Integer.parseInt(array[array.length - 1]))) {
-				if (isNullValues(array)) {
+			if (isNullValues(array)) {
+				if (isNumberOfCopiesValid(Integer.parseInt(array[array.length - 1]))) {
 					bd = new BookDatabase();
-					b = new Book(id, array[1], array[2], array[3], numberOfCopies);
+					b = new Book(Integer.parseInt(array[0]), array[1], array[2], array[3],
+							Integer.parseInt(array[array.length - 1]));
 					int v = bd.updateBookDetails(b);
 					if (v == 1) {
 						return 0;
 					} else
 						return -1;
-				} else// end if no null values
-					return -1;
+				} else
+					return -2;
 			} else
-				return -1;
-		} else// end if is string valid
-			return -1;
+				return -3;
+		} else
+			return -4;
 	}
 
 	// DELETE BOOK FROM DATABASE TABLE
@@ -152,33 +159,6 @@ public class GUICommunication {
 
 	///////////////////////////////////////////////////////////////////////////////// USERS
 	///////////////////////////////////////////////////////////////////////////////// //////////////////////////////////////////
-
-	// //ADD NEW USER TO DATABASE TABLE
-	// public static int addUsers(String[] array) throws Exception {
-	// int privilege = 0,x = 0;
-	// try {// try parse string to integer
-	// privilege = Integer.parseInt(array[array.length - 1]);
-	// if (privilege == 1 || privilege == 2) {// check range of privilege value
-	// if (eliminateNullValues(array)) {
-	// ud = new UserDatabase();
-	// u = new User(array[0], array[1], array[2], array[3], array[4], array[5],
-	// privilege);
-	// x = ud.addUser(u);
-	// // check added to database ok
-	// if (x == 1) {
-	// return 0;// all ok
-	// } else
-	// return -1;// problem adding to database
-	// } else {
-	// return -1;// null value found
-	// }
-	// } else {
-	// return -1;// value out of range
-	// }
-	// } catch (Exception xx) {
-	// return -1;// invalid value
-	// }
-	// }
 
 	// ADD NEW USER TO DATABASE TABLE
 	public static int addUsers(String[] array) throws Exception {
@@ -207,9 +187,9 @@ public class GUICommunication {
 			if (validatePrivilege(Integer.parseInt(array[array.length - 1]))) {
 				if (isNullValues(array)) {
 					return 0;
-				}else 
+				} else
 					return -1;
-			}else
+			} else
 				return -2;
 		}
 		return -3;
@@ -243,7 +223,6 @@ public class GUICommunication {
 	// VALIADE ARRAY TO ELIMINATE NULL VALUES
 	public static boolean isNullValues(String[] array) {
 		for (String x : array) {
-			System.out.println(x);
 			if (x == null || (x != null && ("".equals(x)))) {
 				return false;
 			}
@@ -293,5 +272,68 @@ public class GUICommunication {
 			return true;
 		} else
 			return false;
+	}
+
+	// CHECK RESERVATION TABLE FOR LATE RETURNS
+	public static int[] lateBookReturn() throws SQLException, Exception {
+		int[] bookIds = {};
+		ArrayList<Loan> loan = new ArrayList<>();
+		LoanDatabase ld = new LoanDatabase();
+		loan = ld.getAllLoansByuserId(getLoggedIn());
+		for (int i = 0; i < loan.size(); i++) {
+			if (checkDateLimit(loan.get(i).getDate())) {
+				bookIds[i] = loan.get(i).getBookId();
+			}
+		}
+		return bookIds;
+	}
+
+	static boolean checkDateLimit(Date date) {
+		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate today = LocalDate.now();
+		long days = ChronoUnit.DAYS.between(localDate, today);
+		return days > 3;
+	}
+
+	public static void errorMessage(String error) {
+		JOptionPane.showConfirmDialog(null, error, "Information", JOptionPane.DEFAULT_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public static void displayMessageIfBooksAreLate() throws SQLException, Exception {
+		int[] bookIds = {};
+		String booksLate = "";
+		bd = new BookDatabase();
+		bookIds = lateBookReturn();
+		if (bookIds != null) {
+			for (int s : bookIds) {
+				booksLate += bd.getOneByBookId(s) + "\n";
+			}
+			errorMessage(booksLate);
+		}
+	}
+
+	public static boolean validateUnreserveBookId(String input) throws NumberFormatException, SQLException, Exception {
+		if (isStringValid(input)) {
+			if (isReserveIdValid(Integer.parseInt(input))) {
+				return true;
+			} else
+				return false;
+		}
+		return false;
+	}
+
+	public static boolean isReserveIdValid(int n) throws SQLException, Exception {
+		BookReservationDatabase brd = new BookReservationDatabase();
+		ArrayList<BookReservation> br = new ArrayList<>();
+		br = brd.getOneByBookId(n);
+		if (!br.isEmpty()) {
+			for (BookReservation b : br) {
+				if (b.getBookId() == n) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
