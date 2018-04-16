@@ -21,6 +21,10 @@ import testers.GUICommunication;
 
 public class Login extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtEnterUsername;
 	private JPasswordField passwordField;

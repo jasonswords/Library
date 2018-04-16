@@ -58,7 +58,6 @@ public class MemberHomeScreen extends JFrame {
 				try {
 					MemberHomeScreen frame = new MemberHomeScreen(null);
 					frame.setVisible(true);
-					GUICommunication.displayMessageIfBooksAreLate();
 				} catch (Exception e) {
 					errorMessage("Error, Problem opening the application");
 				}
@@ -73,7 +72,7 @@ public class MemberHomeScreen extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(291, 231, 766, 391);
 		contentPane.add(scrollPane);

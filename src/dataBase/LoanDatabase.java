@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import object.Book;
 import object.Loan;
-import object.Transaction;
 
 public class LoanDatabase {
 	private static String password = "toor";

@@ -6,9 +6,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.JOptionPane;
-
 import dataBase.BookDatabase;
 import dataBase.BookReservationDatabase;
 import dataBase.LoanDatabase;
@@ -300,7 +298,8 @@ public class GUICommunication {
 				JOptionPane.PLAIN_MESSAGE);
 	}
 
-	public static void displayMessageIfBooksAreLate() throws SQLException, Exception {
+	public static void displayLateReturnBooks() throws SQLException, Exception {
+		System.out.println("Late return method called");
 		int[] bookIds = {};
 		String booksLate = "";
 		bd = new BookDatabase();
@@ -308,6 +307,7 @@ public class GUICommunication {
 		if (bookIds != null) {
 			for (int s : bookIds) {
 				booksLate += bd.getOneByBookId(s) + "\n";
+				System.out.println("Late books are " + booksLate);
 			}
 			errorMessage(booksLate);
 		}
