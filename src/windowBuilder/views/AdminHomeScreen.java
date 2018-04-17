@@ -50,6 +50,7 @@ public class AdminHomeScreen extends JFrame {
 	private JButton btnViewAllBooks;
 	private JTable table_1;
 	private JScrollPane scrollPane_2;
+	private JButton btnCheckLateReturns;
 
 	/**
 	 * Launch the application.
@@ -398,6 +399,22 @@ public class AdminHomeScreen extends JFrame {
 		model2 = new DefaultTableModel(col2, 0);
 		table_1 = new JTable(model2);
 		scrollPane_2.setViewportView(table_1);
+		
+		btnCheckLateReturns = new JButton("Check late returns");
+		btnCheckLateReturns.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+					try {
+						GUICommunication.displayLateReturnBooksForAllUsers();
+//						GUICommunication.displayLateReturnBooksForSingleUser();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+//						errorMessage("Problem in late book return modeule");
+					}
+			}
+		});
+		btnCheckLateReturns.setBounds(933, 318, 140, 29);
+		contentPane.add(btnCheckLateReturns);
 		
 		JLabel Label3 = new JLabel("New label");
 		Label3.setIcon(new ImageIcon(Main.class.getResource("/images/Untitled.jpg")));

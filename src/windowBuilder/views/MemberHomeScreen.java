@@ -237,6 +237,7 @@ public class MemberHomeScreen extends JFrame {
 		});
 		btnNewButton_1.setBounds(72, 545, 160, 44);
 		contentPane.add(btnNewButton_1);
+		
 	}
 
 	// display arraylist of books on j table

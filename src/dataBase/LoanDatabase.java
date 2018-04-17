@@ -30,11 +30,11 @@ public class LoanDatabase {
 	public int createTableLoan() throws SQLException, Exception {
 		int i = 0;
 		try {
-			String sql = "CREATE TABLE IF NOT EXISTS Loan" 
+			String sql = "CREATE TABLE IF NOT EXISTS Loan"
 					+ "		(" 
 					+ "		loanId INT AUTO_INCREMENT,"
 					+ "		bookId INT," 
-					+ "		userId INT,"
+					+ "		userId INT," 
 					+ "		date DATE," 
 					+ "		PRIMARY KEY (loanId)"
 					+ "		);";
@@ -142,13 +142,37 @@ public class LoanDatabase {
 		}
 	}
 
-	// method to fetch a specific piece of data by book id
-	public ArrayList<Loan> getOneByBookId(int bookId) throws SQLException, Exception {
+	// // method to fetch a specific piece of data by book id
+	// public ArrayList<Loan> getOneByBookId(int bookId) throws SQLException,
+	// Exception {
+	// ResultSet rs = null;
+	// try {
+	// String sql = "SELECT * FROM Loan WHERE bookId=?";
+	// PreparedStatement ps = getConnection().prepareStatement(sql);
+	// ps.setInt(1, bookId);
+	// rs = ps.executeQuery();
+	// loan = new ArrayList<Loan>();
+	// while (rs.next()) {
+	// loan.add(new Loan(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4)));
+	// }
+	// return loan;
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// return null;
+	// } finally {
+	// if (getConnection() != null) {
+	// getConnection().close();
+	// }
+	// }
+	// }
+
+	// METHOD TO FIND OUT OF DATE BOOKS
+	public ArrayList<Loan> getOutOfDateBooksByUserId(int userId) throws SQLException, Exception {
 		ResultSet rs = null;
 		try {
-			String sql = "SELECT * FROM Loan WHERE bookId=?";
+			String sql = "SELECT* FROM Loan WHERE DateDiff(curdate(),date)  > 3 AND userId=?";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setInt(1, bookId);
+			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
 			while (rs.next()) {
@@ -165,29 +189,52 @@ public class LoanDatabase {
 		}
 	}
 
-	// method to update loan information
-	public int updateLoan(int bookId, int userId, int loanId) throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
-		int i = 0;
+	// METHOD TO GET ALL OUT OF DATE BOOKS
+	public ArrayList<Loan> getAllOutOfDateBooks() throws SQLException, Exception {
+		ResultSet rs = null;
 		try {
-			String sql = "UPDATE Loan SET bookId=?,userId=? WHERE loanId=?";
+			String sql = "SELECT* FROM Loan WHERE DateDiff(curdate(),date)  > 3;";
 			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setInt(1, bookId);
-			ps.setInt(2, userId);
-			ps.setInt(3, loanId);
-
-			i = ps.executeUpdate();
-			return i;
+			rs = ps.executeQuery();
+			loan = new ArrayList<Loan>();
+			while (rs.next()) {
+				loan.add(new Loan(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDate(4)));
+			}
+			return loan;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
-			return 0;
+			return null;
 		} finally {
 			if (getConnection() != null) {
 				getConnection().close();
 			}
 		}
 	}
+
+	// // method to update loan information
+	// public int updateLoan(int bookId, int userId, int loanId) throws
+	// SQLException, Exception {
+	// getConnection().setAutoCommit(false);
+	// int i = 0;
+	// try {
+	// String sql = "UPDATE Loan SET bookId=?,userId=? WHERE loanId=?";
+	// PreparedStatement ps = getConnection().prepareStatement(sql);
+	// ps.setInt(1, bookId);
+	// ps.setInt(2, userId);
+	// ps.setInt(3, loanId);
+	//
+	// i = ps.executeUpdate();
+	// return i;
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// getConnection().rollback();
+	// return 0;
+	// } finally {
+	// if (getConnection() != null) {
+	// getConnection().close();
+	// }
+	// }
+	// }
 
 	// method to delete loan with its id
 	public int deleteLoanDetails(int bookId, int userId) throws SQLException, Exception {
@@ -211,24 +258,48 @@ public class LoanDatabase {
 		}
 	}
 
+	// METHOD TO GET NUMBER OF DAYS LATE A BOOK IS
+	public int getNumberOfDaysLateBookIs(int bookId) throws SQLException, Exception {
+		ResultSet rs = null;
+		int days = 0;
+		try {
+			String sql = "SELECT DateDiff(curdate(),date)FROM Loan WHERE bookId=?;";
+			PreparedStatement ps = getConnection().prepareStatement(sql);
+			ps.setInt(1, bookId);
+			rs = ps.executeQuery();
+			loan = new ArrayList<Loan>();
+			while (rs.next()) {
+				days = rs.getInt(1);
+			}
+			return days;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			if (getConnection() != null) {
+				getConnection().close();
+			}
+		}
+	}
+
 	public int[] addNewLoan(int bookId, int userId) throws Exception {
 		int[] n = new int[2];
 		n[0] = this.addLoanOfBook(bookId, userId);
 		BookDatabase bd = new BookDatabase();
 		Book b = new Book();
 		b = bd.getOneByBookId(bookId);
-		b.setNumOfCopies(b.getNumOfCopies() -1);
+		b.setNumOfCopies(b.getNumOfCopies() - 1);
 		n[1] = bd.updateBookDetails(b);
 		return n;
 	}
-	
+
 	public int[] removeLoanOfBook(int bookId, int userId) throws Exception {
 		int[] n = new int[2];
 		n[0] = this.deleteLoanDetails(bookId, userId);
 		BookDatabase bd = new BookDatabase();
 		Book b = new Book();
 		b = bd.getOneByBookId(bookId);
-		b.setNumOfCopies(b.getNumOfCopies() +1);
+		b.setNumOfCopies(b.getNumOfCopies() + 1);
 		n[1] = bd.updateBookDetails(b);
 		return n;
 	}

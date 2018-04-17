@@ -152,29 +152,29 @@ public class BookDatabase {
 		}
 	}
 
-	// method to fetch a specific piece of data by author
-	public ArrayList<Book> getOneByAuthor(String key) throws SQLException, Exception {
-		String author = "%" + key + "%";
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT * FROM Book WHERE author LIKE ?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setString(1, author);
-			rs = ps.executeQuery();
-			book = new ArrayList<>();
-			while (rs.next()) {
-				book.add(new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
-			}
-			return book;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
-			}
-		}
-	}
+//	// method to fetch a specific piece of data by author
+//	public ArrayList<Book> getOneByAuthor(String key) throws SQLException, Exception {
+//		String author = "%" + key + "%";
+//		ResultSet rs = null;
+//		try {
+//			String sql = "SELECT * FROM Book WHERE author LIKE ?";
+//			PreparedStatement ps = getConnection().prepareStatement(sql);
+//			ps.setString(1, author);
+//			rs = ps.executeQuery();
+//			book = new ArrayList<>();
+//			while (rs.next()) {
+//				book.add(new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
+//			}
+//			return book;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		} finally {
+//			if (getConnection() != null) {
+//				getConnection().close();
+//			}
+//		}
+//	}
 
 	// method to fetch a specific piece of data by book id
 	public Book getOneByBookId(int bookId) throws SQLException, Exception {
@@ -223,30 +223,30 @@ public class BookDatabase {
 //		}
 //	}
 
-	// method to update book information
-	public int updateBookDetails(String bookName, String author, String genre, int numOfCopies, int bookId)
-			throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
-		int i = 0;
-		try {
-			String sql = "UPDATE Book SET bookName=?,author=?,genre=?,numOfCopies=? WHERE bookId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
-			ps.setString(1, bookName);
-			ps.setString(2, author);
-			ps.setString(3, genre);
-			ps.setInt(4, numOfCopies);
-			ps.setInt(5, bookId);
-			i = ps.executeUpdate();
-			return i;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 1;
-		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
-			}
-		}
-	}
+//	// method to update book information
+//	public int updateBookDetails(String bookName, String author, String genre, int numOfCopies, int bookId)
+//			throws SQLException, Exception {
+//		getConnection().setAutoCommit(false);
+//		int i = 0;
+//		try {
+//			String sql = "UPDATE Book SET bookName=?,author=?,genre=?,numOfCopies=? WHERE bookId=?";
+//			PreparedStatement ps = getConnection().prepareStatement(sql);
+//			ps.setString(1, bookName);
+//			ps.setString(2, author);
+//			ps.setString(3, genre);
+//			ps.setInt(4, numOfCopies);
+//			ps.setInt(5, bookId);
+//			i = ps.executeUpdate();
+//			return i;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return 1;
+//		} finally {
+//			if (getConnection() != null) {
+//				getConnection().close();
+//			}
+//		}
+//	}
 
 	// method to update book information
 	public int updateBookDetails(Book b) throws SQLException, Exception {

@@ -1,12 +1,10 @@
 package testers;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
+
 import javax.swing.JOptionPane;
+
 import dataBase.BookDatabase;
 import dataBase.BookReservationDatabase;
 import dataBase.LoanDatabase;
@@ -49,9 +47,11 @@ public class GUICommunication {
 				if (password.equals(u.getPassword())) {
 					isLoggedIn = u.getUserId();
 					privilege = u.getPrivilege();
-				}
-				return u.getPrivilege();
-			}
+					return u.getPrivilege();
+				} else
+					return -1;
+			} else
+				return -1;
 		}
 		return -1;
 	}
@@ -273,46 +273,60 @@ public class GUICommunication {
 	}
 
 	// CHECK RESERVATION TABLE FOR LATE RETURNS
-	public static int[] lateBookReturn() throws SQLException, Exception {
-		int[] bookIds = {};
+	public static ArrayList<Integer> getLateBookIds(int c) throws SQLException, Exception {
+		ArrayList<Integer> id = new ArrayList<>();
 		ArrayList<Loan> loan = new ArrayList<>();
 		LoanDatabase ld = new LoanDatabase();
-		loan = ld.getAllLoansByuserId(getLoggedIn());
-		for (int i = 0; i < loan.size(); i++) {
-			if (checkDateLimit(loan.get(i).getDate())) {
-				bookIds[i] = loan.get(i).getBookId();
+		if (c == 1) {
+			loan = ld.getAllOutOfDateBooks();
+		} else
+			loan = ld.getOutOfDateBooksByUserId(getLoggedIn());
+		if (!loan.isEmpty()) {
+			for (int i = 0; i < loan.size(); i++) {
+				id.add(loan.get(i).getBookId());
 			}
+			return id;
+		} else {
+			errorMessage("The loan table is empty", "Information");
 		}
-		return bookIds;
+		return id;
 	}
 
-	static boolean checkDateLimit(Date date) {
-		LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		LocalDate today = LocalDate.now();
-		long days = ChronoUnit.DAYS.between(localDate, today);
-		return days > 1;
-	}
-
-	public static void errorMessage(String error) {
-		JOptionPane.showConfirmDialog(null, error, "Information", JOptionPane.DEFAULT_OPTION,
-				JOptionPane.PLAIN_MESSAGE);
-	}
-
-	public static void displayLateReturnBooks() throws SQLException, Exception {
-		System.out.println("Late return method called");
-		int[] bookIds = {};
+	// DISPLAY BOOKS THAT ARE LATE BEING RETURNED
+	public static void displayLateReturnBooksForAllUsers() throws SQLException, Exception {
+		ArrayList<Integer> bookIds = getLateBookIds(1);
+		ArrayList<Integer> daysLate = getDaysLate();
+		Book b = new Book();
 		String booksLate = "";
 		bd = new BookDatabase();
-		bookIds = lateBookReturn();
-		if (bookIds != null) {
-			for (int s : bookIds) {
-				booksLate += bd.getOneByBookId(s) + "\n";
-				System.out.println("Late books are " + booksLate);
+		if (!bookIds.isEmpty()) {
+			for (int i=0;i<bookIds.size();i++) {
+				b = bd.getOneByBookId(bookIds.get(i));
+				System.out.println("Days late "+daysLate.get(i));
+				booksLate += b.getBookName() + "   --- Fees owed: €"+(daysLate.get(i)*3) +" --- \n";
 			}
-			errorMessage(booksLate);
-		}
+			errorMessage(booksLate, "Late Books");
+		} else
+			errorMessage("The loan table is empty", "Information");
 	}
 
+	//METHOD TO RETURN LIST OF DAYS LATE A BOOK IS
+	public static ArrayList<Integer> getDaysLate() throws SQLException, Exception {
+		ArrayList<Integer> bookIds = getLateBookIds(1);
+		ArrayList<Integer> daysLate = new ArrayList<>();
+		ld = new LoanDatabase();
+		for(int i=0;i<bookIds.size();i++) {
+			daysLate.add(ld.getNumberOfDaysLateBookIs(bookIds.get(i)));
+		}
+		return daysLate;
+	}
+
+	// DISPLAY ERROR MESSAGE IN POP UP BOX
+	public static void errorMessage(String error, String title) {
+		JOptionPane.showConfirmDialog(null, error, title, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+	}
+
+	// VALIDATE ID BRFORE UN-RESERVING A BOOK
 	public static boolean validateUnreserveBookId(String input) throws NumberFormatException, SQLException, Exception {
 		if (isStringValid(input)) {
 			if (isReserveIdValid(Integer.parseInt(input))) {
@@ -323,6 +337,7 @@ public class GUICommunication {
 		return false;
 	}
 
+	// VALIDATE IF INPUTED ID EXISTS IN DATABASE
 	public static boolean isReserveIdValid(int n) throws SQLException, Exception {
 		BookReservationDatabase brd = new BookReservationDatabase();
 		ArrayList<BookReservation> br = new ArrayList<>();
