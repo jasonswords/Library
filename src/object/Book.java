@@ -1,6 +1,6 @@
 package object;
 
-public class Book extends Product {
+public class Book{
 	private int bookId;
 	private String bookName;
 	private String author;
