@@ -400,7 +400,7 @@ public class AdminHomeScreen extends JFrame {
 		table_1 = new JTable(model2);
 		scrollPane_2.setViewportView(table_1);
 		
-		btnCheckLateReturns = new JButton("Check late returns");
+		btnCheckLateReturns = new JButton("Late Returns");
 		btnCheckLateReturns.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			

@@ -99,7 +99,7 @@ public class Login extends JFrame {
 		});
 		Button1.setForeground(Color.RED);
 		Button1.setFont(new Font("Calibri", Font.PLAIN, 37));
-		Button1.setBounds(590, 410, 122, 43);
+		Button1.setBounds(590, 410, 144, 58);
 		getContentPane().add(Button1);
 
 		Button2 = new JButton("Home");
@@ -112,7 +112,7 @@ public class Login extends JFrame {
 		});
 		Button2.setForeground(Color.RED);
 		Button2.setFont(new Font("Calibri", Font.PLAIN, 37));
-		Button2.setBounds(418, 410, 134, 43);
+		Button2.setBounds(412, 410, 166, 58);
 		getContentPane().add(Button2);
 
 		txtEnterUsername = new JTextField();

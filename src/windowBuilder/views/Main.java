@@ -92,7 +92,7 @@ public class Main extends JFrame {
 			}
 		});
 		Button1.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		Button1.setBounds(517, 335, 111, 41);
+		Button1.setBounds(490, 335, 165, 41);
 		getContentPane().add(Button1);
 
 		JButton Button2 = new JButton("Login");

@@ -107,7 +107,7 @@ public class SearchResults extends JFrame {
 			}
 		});
 		btnNewButton.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		btnNewButton.setBounds(703, 18, 111, 41);
+		btnNewButton.setBounds(703, 18, 147, 41);
 		contentPane.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Home");
@@ -119,7 +119,7 @@ public class SearchResults extends JFrame {
 			}
 		});
 		btnNewButton_1.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		btnNewButton_1.setBounds(69, 18, 111, 41);
+		btnNewButton_1.setBounds(69, 18, 132, 41);
 		contentPane.add(btnNewButton_1);
 
 		txtSearchAgain = new JTextField();
