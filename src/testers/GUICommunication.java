@@ -302,7 +302,6 @@ public class GUICommunication {
 		if (!bookIds.isEmpty()) {
 			for (int i=0;i<bookIds.size();i++) {
 				b = bd.getOneByBookId(bookIds.get(i));
-				System.out.println("Days late "+daysLate.get(i));
 				booksLate += b.getBookName() + "   --- Fees owed: €"+(daysLate.get(i)*3) +" --- \n";
 			}
 			errorMessage(booksLate, "Late Books");
