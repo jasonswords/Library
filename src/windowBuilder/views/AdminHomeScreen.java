@@ -1,8 +1,11 @@
 package windowBuilder.views;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -16,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,8 +28,6 @@ import dataBase.UserDatabase;
 import object.Book;
 import object.User;
 import testers.GUICommunication;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class AdminHomeScreen extends JFrame {
 
@@ -51,6 +53,7 @@ public class AdminHomeScreen extends JFrame {
 	private JTable table_1;
 	private JScrollPane scrollPane_2;
 	private JButton btnCheckLateReturns;
+	private JLabel label;
 
 	/**
 	 * Launch the application.
@@ -70,8 +73,10 @@ public class AdminHomeScreen extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws Exception 
+	 * @throws SQLException 
 	 */
-	public AdminHomeScreen() {
+	public AdminHomeScreen() throws SQLException, Exception {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(150, 45, 1100, 650);
@@ -406,15 +411,27 @@ public class AdminHomeScreen extends JFrame {
 			
 					try {
 						GUICommunication.displayLateReturnBooksForAllUsers();
-//						GUICommunication.displayLateReturnBooksForSingleUser();
 					} catch (Exception e1) {
-						e1.printStackTrace();
-//						errorMessage("Problem in late book return modeule");
+						errorMessage("Problem in late book return modeule");
 					}
 			}
 		});
 		btnCheckLateReturns.setBounds(933, 318, 140, 29);
 		contentPane.add(btnCheckLateReturns);
+		
+		label = new JLabel("");
+		UserDatabase ud = new UserDatabase();
+		User u = new User();
+		u = ud.getOneUserById(GUICommunication.getLoggedIn());
+		if (u != null) {
+			label = new JLabel("Welcome " + u.getFirstName());
+		} else {
+			label.setText("Unknown User");
+		}
+		label.setOpaque(true);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(896, 27, 177, 16);
+		contentPane.add(label);
 		
 		JLabel Label3 = new JLabel("New label");
 		Label3.setIcon(new ImageIcon(Main.class.getResource("/images/Untitled.jpg")));
