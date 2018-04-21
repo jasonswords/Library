@@ -61,7 +61,7 @@ public class Login extends JFrame {
 		Label1.setForeground(Color.WHITE);
 		Label1.setFont(new Font("AR DARLING", Font.BOLD, 65));
 		Label1.setHorizontalAlignment(SwingConstants.CENTER);
-		Label1.setBounds(330, 120, 549, 91);
+		Label1.setBounds(295, 120, 549, 91);
 		getContentPane().add(Label1);
 
 		JLabel Label2 = new JLabel("Welcome");

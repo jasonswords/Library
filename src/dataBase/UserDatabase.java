@@ -1,7 +1,5 @@
 package dataBase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,22 +8,8 @@ import java.util.ArrayList;
 import object.User;
 
 public class UserDatabase {
-	private static String password = "toor";
-	private static String username = "root";
 	static ArrayList<User> user;
 	User u;
-
-	// CREATE CONNECTION TO DATABASE
-	public static Connection getConnection() throws Exception {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library?autoReconnect=true&useSSL=false",
-					username, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	// CREATE TABLE IN DATABASE FOR USER OBJECTS
 	public void createTableUser() throws SQLException, Exception {
@@ -42,13 +26,13 @@ public class UserDatabase {
 					+ "PRIMARY KEY (userId)" 
 					+ ");";
 
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -62,7 +46,7 @@ public class UserDatabase {
 		try {
 			String sql = "INSERT INTO User (firstName, surName, address, phone, userName, password, privilege)"
 					+ " VALUES (?,?,?,?,?,?,?)";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			ps.setString(2, surName);
 			ps.setString(3, address);
@@ -76,8 +60,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return i;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -90,7 +74,7 @@ public class UserDatabase {
 			try {
 				String sql = "INSERT INTO User (firstName, surName, address, phone, userName, password, privilege)"
 						+ " VALUES (?,?,?,?,?,?,?)";
-				PreparedStatement ps = getConnection().prepareStatement(sql);
+				PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 				ps.setString(1, u.getFirstName());
 				ps.setString(2, u.getSurName());
 				ps.setString(3, u.getAddress());
@@ -104,8 +88,8 @@ public class UserDatabase {
 				e.printStackTrace();
 				return i;
 			} finally {
-				if (getConnection() != null) {
-					getConnection().close();
+				if (DatabaseConnection.getConnection() != null) {
+					DatabaseConnection.getConnection().close();
 				}
 			}
 		}
@@ -115,7 +99,7 @@ public class UserDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM User";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
 			while (rs.next()) {
@@ -127,8 +111,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -139,7 +123,7 @@ public class UserDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM User WHERE firstName=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
@@ -152,8 +136,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -162,7 +146,7 @@ public class UserDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM User WHERE firstName=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			rs = ps.executeQuery();
 
@@ -175,8 +159,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -186,7 +170,7 @@ public class UserDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM User WHERE surName=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, surName);
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
@@ -199,8 +183,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -210,7 +194,7 @@ public class UserDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM User WHERE userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			user = new ArrayList<User>();
@@ -223,8 +207,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -234,7 +218,7 @@ public class UserDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM User WHERE userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -246,19 +230,19 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
 
 	// method to update user information
 	public int updateUserDetails(String firstName, String surName, String address, String phone, String userName, String password, int privilege, int userId) throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
+		DatabaseConnection.getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
 			String sql = "UPDATE User SET firstName=?,surName=?,address=?, phone=?, userName=?, password=?, privilege=? WHERE userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, firstName);
 			ps.setString(2, surName);
 			ps.setString(3, address);
@@ -271,32 +255,32 @@ public class UserDatabase {
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
+			DatabaseConnection.getConnection().rollback();
 			return 0;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
 
 	// method to delete user by his id
 	public int deleteUserDetails(int userId) throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
+		DatabaseConnection.getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
 			String sql = "DELETE FROM User WHERE userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
+			DatabaseConnection.getConnection().rollback();
 			return 0;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -307,7 +291,7 @@ public class UserDatabase {
 
 		try {
 			String sql = "SELECT * FROM User WHERE userName=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, username);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -319,8 +303,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -330,7 +314,7 @@ public class UserDatabase {
 
 		try {
 			String sql = "SELECT * FROM User WHERE password=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setString(1, password);
 			rs = ps.executeQuery();
 			while (rs.next()) {
@@ -342,8 +326,8 @@ public class UserDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}

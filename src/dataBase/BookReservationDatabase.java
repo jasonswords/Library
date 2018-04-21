@@ -1,7 +1,5 @@
 package dataBase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,22 +8,8 @@ import java.util.ArrayList;
 import object.BookReservation;
 
 public class BookReservationDatabase {
-	private static String password = "toor";
-	private static String username = "root";
 
 	ArrayList<BookReservation> bookRes;
-
-	// method for create connection
-	public static Connection getConnection() throws Exception {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library?autoReconnect=true&useSSL=false",
-					username, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	// create table if not already created
 	public int createTableReservation() throws SQLException, Exception {
@@ -38,15 +22,15 @@ public class BookReservationDatabase {
 					+ "bookId INT," 
 					+ "PRIMARY KEY(reservationId)" 
 					+ ");";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return 0;
 		}finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -57,7 +41,7 @@ public class BookReservationDatabase {
 		int i = 0;
 		try {
 			String sql = "INSERT INTO Reservation (userId, bookId)" + " VALUES (?,?)";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			ps.setInt(2, bookId);
 			i = ps.executeUpdate();
@@ -66,8 +50,8 @@ public class BookReservationDatabase {
 			e.printStackTrace();
 			return i;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -77,7 +61,7 @@ public class BookReservationDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
 			while (rs.next()) {
@@ -88,8 +72,8 @@ public class BookReservationDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -99,7 +83,7 @@ public class BookReservationDatabase {
 			ResultSet rs = null;
 			try {
 				String sql = "SELECT * FROM Reservation WHERE userId=?";
-				PreparedStatement ps = getConnection().prepareStatement(sql);
+				PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 				ps.setInt(1, userId);
 				rs = ps.executeQuery();
 				bookRes = new ArrayList<BookReservation>();
@@ -111,8 +95,8 @@ public class BookReservationDatabase {
 				e.printStackTrace();
 				return null;
 			} finally {
-				if (getConnection() != null) {
-					getConnection().close();
+				if (DatabaseConnection.getConnection() != null) {
+					DatabaseConnection.getConnection().close();
 				}
 			}
 		}
@@ -122,7 +106,7 @@ public class BookReservationDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation WHERE reservationId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, reservationId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
@@ -134,8 +118,8 @@ public class BookReservationDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -145,7 +129,7 @@ public class BookReservationDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation WHERE userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
@@ -157,8 +141,8 @@ public class BookReservationDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -168,7 +152,7 @@ public class BookReservationDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Reservation WHERE bookId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
 			bookRes = new ArrayList<BookReservation>();
@@ -180,19 +164,19 @@ public class BookReservationDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
 
 	// method to update reservation information
 	public int updateLoan(int userId, int bookId, int reservationId) throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
+		DatabaseConnection.getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
 			String sql = "UPDATE Reservation SET userId=?,bookId=? WHERE reservationId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			ps.setInt(2, userId);
 			ps.setInt(3, reservationId);
@@ -201,33 +185,33 @@ public class BookReservationDatabase {
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
+			DatabaseConnection.getConnection().rollback();
 			return 0;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
 
 	// method to delete reservation by id
 	public int deleteReservation(int bookId, int userId) throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
+		DatabaseConnection.getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
 			String sql = "DELETE FROM Reservation WHERE bookId=? AND userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			ps.setInt(2, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
+			DatabaseConnection.getConnection().rollback();
 			return 0;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}

@@ -1,7 +1,5 @@
 package dataBase;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,21 +9,7 @@ import object.Book;
 import object.Loan;
 
 public class LoanDatabase {
-	private static String password = "toor";
-	private static String username = "root";
 	ArrayList<Loan> loan;
-
-	// method for create connection
-	public static Connection getConnection() throws Exception {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library?autoReconnect=true&useSSL=false",
-					username, password);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	public int createTableLoan() throws SQLException, Exception {
 		int i = 0;
@@ -38,15 +22,15 @@ public class LoanDatabase {
 					+ "		date DATE," 
 					+ "		PRIMARY KEY (loanId)"
 					+ "		);";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return i;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -59,7 +43,7 @@ public class LoanDatabase {
 		int i = 0;
 		try {
 			String sql = "INSERT INTO Loan (bookId, userId)" + " VALUES (?,?)";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			ps.setInt(2, userId);
 			i = ps.executeUpdate();
@@ -68,8 +52,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return i;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -79,7 +63,7 @@ public class LoanDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Loan";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
 			while (rs.next()) {
@@ -90,8 +74,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -101,7 +85,7 @@ public class LoanDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Loan WHERE loanId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, loanId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
@@ -113,8 +97,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -124,7 +108,7 @@ public class LoanDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT * FROM Loan WHERE userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
@@ -136,8 +120,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -148,7 +132,7 @@ public class LoanDatabase {
 	// ResultSet rs = null;
 	// try {
 	// String sql = "SELECT * FROM Loan WHERE bookId=?";
-	// PreparedStatement ps = getConnection().prepareStatement(sql);
+	// PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 	// ps.setInt(1, bookId);
 	// rs = ps.executeQuery();
 	// loan = new ArrayList<Loan>();
@@ -160,8 +144,8 @@ public class LoanDatabase {
 	// e.printStackTrace();
 	// return null;
 	// } finally {
-	// if (getConnection() != null) {
-	// getConnection().close();
+	// if (DatabaseConnection.getConnection() != null) {
+	// DatabaseConnection.getConnection().close();
 	// }
 	// }
 	// }
@@ -171,7 +155,7 @@ public class LoanDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT* FROM Loan WHERE DateDiff(curdate(),date)  > 3 AND userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, userId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
@@ -183,8 +167,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -194,7 +178,7 @@ public class LoanDatabase {
 		ResultSet rs = null;
 		try {
 			String sql = "SELECT* FROM Loan WHERE DateDiff(curdate(),date)  > 3;";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
 			while (rs.next()) {
@@ -205,8 +189,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -214,11 +198,11 @@ public class LoanDatabase {
 	// // method to update loan information
 	// public int updateLoan(int bookId, int userId, int loanId) throws
 	// SQLException, Exception {
-	// getConnection().setAutoCommit(false);
+	// DatabaseConnection.getConnection().setAutoCommit(false);
 	// int i = 0;
 	// try {
 	// String sql = "UPDATE Loan SET bookId=?,userId=? WHERE loanId=?";
-	// PreparedStatement ps = getConnection().prepareStatement(sql);
+	// PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 	// ps.setInt(1, bookId);
 	// ps.setInt(2, userId);
 	// ps.setInt(3, loanId);
@@ -227,33 +211,33 @@ public class LoanDatabase {
 	// return i;
 	// } catch (Exception e) {
 	// e.printStackTrace();
-	// getConnection().rollback();
+	// DatabaseConnection.getConnection().rollback();
 	// return 0;
 	// } finally {
-	// if (getConnection() != null) {
-	// getConnection().close();
+	// if (DatabaseConnection.getConnection() != null) {
+	// DatabaseConnection.getConnection().close();
 	// }
 	// }
 	// }
 
 	// method to delete loan with its id
 	public int deleteLoanDetails(int bookId, int userId) throws SQLException, Exception {
-		getConnection().setAutoCommit(false);
+		DatabaseConnection.getConnection().setAutoCommit(false);
 		int i = 0;
 		try {
 			String sql = "DELETE FROM Loan WHERE bookId=? AND userId=?";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			ps.setInt(2, userId);
 			i = ps.executeUpdate();
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
-			getConnection().rollback();
+			DatabaseConnection.getConnection().rollback();
 			return 0;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}
@@ -264,7 +248,7 @@ public class LoanDatabase {
 		int days = 0;
 		try {
 			String sql = "SELECT DateDiff(curdate(),date)FROM Loan WHERE bookId=?;";
-			PreparedStatement ps = getConnection().prepareStatement(sql);
+			PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql);
 			ps.setInt(1, bookId);
 			rs = ps.executeQuery();
 			loan = new ArrayList<Loan>();
@@ -276,8 +260,8 @@ public class LoanDatabase {
 			e.printStackTrace();
 			return -1;
 		} finally {
-			if (getConnection() != null) {
-				getConnection().close();
+			if (DatabaseConnection.getConnection() != null) {
+				DatabaseConnection.getConnection().close();
 			}
 		}
 	}

@@ -2,7 +2,6 @@ package testers;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
 
 import dataBase.BookDatabase;
@@ -40,7 +39,7 @@ public class GUICommunication {
 		bd = new BookDatabase();
 		ud = new UserDatabase();
 		String password = String.valueOf(pass);
-		if (username != null && pass != null) {
+		if (username != null || pass != null) {
 			if (ud.isUserNameValid(username)) {
 				u = new User();
 				u = ud.getOneByUserName(username);
