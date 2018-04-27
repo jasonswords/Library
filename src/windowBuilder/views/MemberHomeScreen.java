@@ -236,6 +236,13 @@ public class MemberHomeScreen extends JFrame {
 				}catch(Exception ev) {
 					errorMessage("Problem occurrred un-reserving book");
 				}
+				
+				
+				
+				
+				
+				
+				
 			}
 		});
 		btnNewButton_1.setBounds(904, 291, 192, 35);
@@ -340,6 +347,7 @@ public class MemberHomeScreen extends JFrame {
 		return false;
 	}
 
+	//METHOD TO DISPLAY RESERVED BOOKS IF THEY EXIST
 	public static boolean displayReservedBooks() {
 		ArrayList<BookReservation> reserved = new ArrayList<>();
 		ArrayList<Book> book = new ArrayList<>();
@@ -354,6 +362,7 @@ public class MemberHomeScreen extends JFrame {
 				displayBooks(book, 0);
 				return true;
 			} else {
+				table.setModel(new DefaultTableModel(null, new String[]{"Book ID", "Title", "Author", "Genre", "Number Available"}));
 				errorMessage("Currnetly no books reserved");
 				return false;
 			}

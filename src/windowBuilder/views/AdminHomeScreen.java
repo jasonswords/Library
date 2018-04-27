@@ -109,8 +109,6 @@ public class AdminHomeScreen extends JFrame {
 				initialiseUserLabel(userLabels, "Add Member");
 				textField.setVisible(false);
 				label1.setVisible(false);
-				lblNewLabel.setVisible(true);
-				lblMember.setVisible(true);
 				clearTextFields();	
 			}
 		});
@@ -269,9 +267,7 @@ public class AdminHomeScreen extends JFrame {
 							int id = Integer.parseInt(textField.getText());
 							ud.deleteUserDetails(id);
 							internalFrame.doDefaultCloseAction();
-							user = new ArrayList<>();
-							user = ud.getAllUsers();
-							displayUsers(user);
+							displayAllUsers();
 						} catch (SQLException e1) {
 							errorMessage("A problem occured with the database");
 						} catch (Exception e1) {
@@ -287,7 +283,8 @@ public class AdminHomeScreen extends JFrame {
 					try {
 						int b = GUICommunication.editUser(array);
 						displayReturn(b);
-					}catch (Exception e1) {
+						displayAllUsers();
+						}catch (Exception e1) {
 							errorMessage("No changes were saved");
 						}
      /////////////////////////////////////////////////////////////////////////////////////  INNER ADD BOOK BUTTON  /////////////////////////////
@@ -345,14 +342,14 @@ public class AdminHomeScreen extends JFrame {
 		btnCancel_1.setBounds(449, 273, 117, 29);
 		internalFrame.getContentPane().add(btnCancel_1);
 		
-		lblNewLabel = new JLabel("1 = Admin");
-		lblNewLabel.setVisible(false);
-		lblNewLabel.setBounds(470, 105, 84, 26);
+		lblNewLabel = new JLabel();
+		lblNewLabel.setVisible(true);
+		lblNewLabel.setBounds(470, 105, 118, 26);
 		internalFrame.getContentPane().add(lblNewLabel);
 		
-		lblMember = new JLabel("2 = Member");
-		lblMember.setVisible(false);
-		lblMember.setBounds(470, 124, 84, 29);
+		lblMember = new JLabel();
+		lblMember.setVisible(true);
+		lblMember.setBounds(470, 124, 118, 29);
 		internalFrame.getContentPane().add(lblMember);
 ////////////////////////////////////////////////////////////////////////////////////OUTER ADD BOOK BUTTON  /////////////////////////////
 		JButton btnAddBook = new JButton("Add Book");
@@ -415,7 +412,6 @@ public class AdminHomeScreen extends JFrame {
 		model = new DefaultTableModel(col, 0);
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
-
 		String[] col2 = { "Book ID", "Book Title", "Author", "Genre", "Copies Available" };
 		model2 = new DefaultTableModel(col2, 0);
 		table_1 = new JTable(model2);
@@ -657,6 +653,8 @@ public class AdminHomeScreen extends JFrame {
 		textField_5.setVisible(true);
 		textField_6.setVisible(true);
 		textField_7.setVisible(true);
+		lblNewLabel.setText("1 = Member");
+		lblMember.setText("2 = Admin");
 		textField.setVisible(true);
 		label1.setVisible(true);
 		label6.setVisible(true);
@@ -677,6 +675,8 @@ public class AdminHomeScreen extends JFrame {
 		label6.setVisible(false);
 		label7.setVisible(false);
 		label8.setVisible(false);
+		lblNewLabel.setText("Number of Books");
+		lblMember.setText("  0 --- 100");
 		internalFrame.setTitle(s);
 		internalFrame.setVisible(true);
 		internalFrameButton.setText(s);

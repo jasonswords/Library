@@ -183,6 +183,7 @@ public class GUICommunication {
 		if (isStringValid(array[array.length - 1])) {
 			if (validatePrivilege(Integer.parseInt(array[array.length - 1]))) {
 				if (isNullValues(array)) {
+					proceedWithEdit(array);
 					return 0;
 				} else
 					return -1;
