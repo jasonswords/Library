@@ -57,18 +57,18 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel Label1 = new JLabel("Member Login");
+		JLabel Label1 = new JLabel("Library Login");
 		Label1.setForeground(Color.WHITE);
 		Label1.setFont(new Font("AR DARLING", Font.BOLD, 65));
 		Label1.setHorizontalAlignment(SwingConstants.CENTER);
 		Label1.setBounds(295, 120, 549, 91);
 		getContentPane().add(Label1);
 
-		JLabel Label2 = new JLabel("Welcome");
+		JLabel Label2 = new JLabel("Enter username and password");
 		Label2.setForeground(Color.WHITE);
-		Label2.setFont(new Font("Calibri", Font.BOLD, 53));
+		Label2.setFont(new Font("AR DELANEY", Font.BOLD, 50));
 		Label2.setHorizontalAlignment(SwingConstants.CENTER);
-		Label2.setBounds(258, 223, 621, 58);
+		Label2.setBounds(130, 214, 875, 58);
 		getContentPane().add(Label2);
 
 		JButton Button1 = new JButton("Login");
@@ -97,9 +97,9 @@ public class Login extends JFrame {
 
 			}
 		});
-		Button1.setForeground(Color.RED);
-		Button1.setFont(new Font("Calibri", Font.PLAIN, 37));
-		Button1.setBounds(590, 410, 144, 58);
+		Button1.setForeground(Color.BLACK);
+		Button1.setFont(new Font("AR BLANCA", Font.PLAIN, 28));
+		Button1.setBounds(598, 410, 136, 43);
 		getContentPane().add(Button1);
 
 		Button2 = new JButton("Home");
@@ -110,9 +110,9 @@ public class Login extends JFrame {
 				dispose();
 			}
 		});
-		Button2.setForeground(Color.RED);
-		Button2.setFont(new Font("Calibri", Font.PLAIN, 37));
-		Button2.setBounds(412, 410, 166, 58);
+		Button2.setForeground(Color.BLACK);
+		Button2.setFont(new Font("AR BLANCA", Font.PLAIN, 28));
+		Button2.setBounds(442, 410, 136, 43);
 		getContentPane().add(Button2);
 
 		txtEnterUsername = new JTextField();

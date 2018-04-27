@@ -65,7 +65,7 @@ public class Main extends JFrame {
 
 		txtSearchByTitle = new JTextField();
 		txtSearchByTitle.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		txtSearchByTitle.setText("Search by Title of the Book,Author or Genre");
+		txtSearchByTitle.setText("Search by Title of the Book, Author or Genre");
 		txtSearchByTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		txtSearchByTitle.setBackground(Color.LIGHT_GRAY);
 		txtSearchByTitle.setBounds(241, 267, 656, 41);
@@ -92,7 +92,7 @@ public class Main extends JFrame {
 			}
 		});
 		Button1.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		Button1.setBounds(490, 335, 165, 41);
+		Button1.setBounds(479, 361, 176, 48);
 		getContentPane().add(Button1);
 
 		JButton Button2 = new JButton("Login");
@@ -105,7 +105,7 @@ public class Main extends JFrame {
 			}
 		});
 		Button2.setFont(new Font("AR BLANCA", Font.PLAIN, 26));
-		Button2.setBounds(490, 524, 165, 41);
+		Button2.setBounds(479, 468, 176, 48);
 		getContentPane().add(Button2);
 
 		JLabel Label3 = new JLabel("New label");

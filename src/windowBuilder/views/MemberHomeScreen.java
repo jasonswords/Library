@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,7 +39,7 @@ public class MemberHomeScreen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private static JTable table;
-	private JTextField textField;
+	private JTextField txtNameauthorgenre;
 	private JOptionPane pane;
 	static DefaultTableModel model;
 	JLabel lblNewLabel;
@@ -74,7 +75,7 @@ public class MemberHomeScreen extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(291, 231, 766, 391);
+		scrollPane.setBounds(197, 234, 695, 340);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(table);
 
@@ -92,12 +93,12 @@ public class MemberHomeScreen extends JFrame {
 				dispose();
 			}
 		});
-		btnLogOut.setFont(new Font("Calibri", Font.PLAIN, 24));
-		btnLogOut.setBounds(31, 24, 248, 61);
+		btnLogOut.setFont(new Font("AR BLANCA", Font.PLAIN, 24));
+		btnLogOut.setBounds(6, 6, 138, 43);
 		contentPane.add(btnLogOut);
 
 		JButton btnNewButton = new JButton("Return Book");
-		btnNewButton.setFont(new Font("Calibri", Font.PLAIN, 24));
+		btnNewButton.setFont(new Font("AR BLANCA", Font.PLAIN, 20));
 		btnNewButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -144,7 +145,7 @@ public class MemberHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnNewButton.setBounds(17, 296, 248, 70);
+		btnNewButton.setBounds(17, 234, 160, 35);
 		contentPane.add(btnNewButton);
 
 		JButton btnBorrowBook = new JButton("Loan a Book");
@@ -157,21 +158,22 @@ public class MemberHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnBorrowBook.setFont(new Font("Calibri", Font.PLAIN, 24));
-		btnBorrowBook.setBounds(17, 378, 248, 61);
+		btnBorrowBook.setFont(new Font("AR BLANCA", Font.PLAIN, 20));
+		btnBorrowBook.setBounds(17, 291, 160, 35);
 		contentPane.add(btnBorrowBook);
 
-		textField = new JTextField("Name/Author/Genre");
-		textField.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
-		textField.setBackground(Color.LIGHT_GRAY);
-		textField.setBounds(368, 143, 311, 64);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtNameauthorgenre = new JTextField("Name/Author/Genre");
+		txtNameauthorgenre.setHorizontalAlignment(SwingConstants.CENTER);
+		txtNameauthorgenre.setFont(new Font("AR BLANCA", Font.PLAIN, 29));
+		txtNameauthorgenre.setBackground(Color.LIGHT_GRAY);
+		txtNameauthorgenre.setBounds(231, 135, 362, 47);
+		contentPane.add(txtNameauthorgenre);
+		txtNameauthorgenre.setColumns(10);
 
 		JButton btnSearchBooks = new JButton("Search Books");
 		btnSearchBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String key = textField.getText();
+				String key = txtNameauthorgenre.getText();
 				try {
 					if (!key.isEmpty()) {
 						ArrayList<Book> book = new ArrayList<>();
@@ -188,8 +190,8 @@ public class MemberHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnSearchBooks.setFont(new Font("Calibri", Font.PLAIN, 24));
-		btnSearchBooks.setBounds(689, 146, 292, 61);
+		btnSearchBooks.setFont(new Font("AR BLANCA", Font.PLAIN, 25));
+		btnSearchBooks.setBounds(624, 138, 235, 43);
 		contentPane.add(btnSearchBooks);
 
 		UserDatabase ud = new UserDatabase();
@@ -200,44 +202,49 @@ public class MemberHomeScreen extends JFrame {
 		} else {
 			lblNewLabel.setText("Unknown User");
 		}
-		lblNewLabel.setOpaque(true);
+
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Calibri", Font.PLAIN, 24));
 		lblNewLabel.setBackground(Color.WHITE);
-		lblNewLabel.setBounds(778, 29, 316, 54);
+		lblNewLabel.setBounds(857, 0, 243, 41);
 		contentPane.add(lblNewLabel);
 
-		JLabel lblMembersArea = new JLabel("Members Area");
-		lblMembersArea.setOpaque(true);
+		JLabel lblMembersArea = new JLabel("Member Home Screen");
 		lblMembersArea.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMembersArea.setForeground(Color.BLACK);
-		lblMembersArea.setBackground(Color.WHITE);
-		lblMembersArea.setFont(new Font("Calibri", Font.PLAIN, 30));
-		lblMembersArea.setBounds(454, 6, 235, 61);
+		lblMembersArea.setForeground(Color.WHITE);
+		lblMembersArea.setFont(new Font("AR DARLING", Font.BOLD, 57));
+		lblMembersArea.setBounds(195, 11, 683, 61);
 		contentPane.add(lblMembersArea);
 
 		JButton btnReservedBooks = new JButton("Reserved Books");
+		btnReservedBooks.setFont(new Font("AR BLANCA", Font.PLAIN, 22));
 		btnReservedBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				displayReservedBooks();
 			}
 		});
-		btnReservedBooks.setBounds(72, 486, 160, 47);
+		btnReservedBooks.setBounds(904, 234, 192, 35);
 		contentPane.add(btnReservedBooks);
 
 		JButton btnNewButton_1 = new JButton("Un-reserve book");
+		btnNewButton_1.setFont(new Font("AR BLANCA", Font.PLAIN, 21));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					unReserveBook();
 				}catch(Exception ev) {
-					
+					errorMessage("Problem occurrred un-reserving book");
 				}
 			}
 		});
-		btnNewButton_1.setBounds(72, 545, 160, 44);
+		btnNewButton_1.setBounds(904, 291, 192, 35);
 		contentPane.add(btnNewButton_1);
 		
+		JLabel Label3 = new JLabel("New label");
+		Label3.setIcon(new ImageIcon(Main.class.getResource("/images/Untitled.jpg")));
+		Label3.setBounds(0, -19, 1100, 630);
+		contentPane.add(Label3);
 	}
 
 	// display arraylist of books on j table

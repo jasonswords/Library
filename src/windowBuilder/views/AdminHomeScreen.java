@@ -1,6 +1,8 @@
 package windowBuilder.views;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -32,7 +34,7 @@ public class AdminHomeScreen extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
+	private JTable table,table_1;
 	DefaultTableModel model, model2;
 	Object[] rowData, rowData2;
 	ArrayList<User> user;
@@ -41,18 +43,14 @@ public class AdminHomeScreen extends JFrame {
 	Book b;
 	UserDatabase ud;
 	BookDatabase bd;
-	JButton internalFrameButton;
 	JInternalFrame internalFrame;
 	private JTextField textField;
-	private JLabel label1, label2, label3, label4, label5, label6, label7, label8;
+	private JLabel label1, label2, label3, label4, label5, label6, label7, label8,label,lblNewLabel,lblMember;
 	private JTextField textField_1, textField_2, textField_3, textField_4, textField_5, textField_6, textField_7;
 	private String[] userLabels = { "Member ID", "First Name", "Sur-name", "Address", "Phone Number", "UserName","Password", "Privilege" };
 	private String[] bookLabels = { "Book ID", "Title", "Author", "Genre", "Number Available" };
-	private JButton btnViewAllBooks;
-	private JTable table_1;
+	private JButton btnViewAllBooks,btnCheckLateReturns,internalFrameButton;
 	private JScrollPane scrollPane_2;
-	private JButton btnCheckLateReturns;
-	private JLabel label;
 
 	/**
 	 * Launch the application.
@@ -83,6 +81,13 @@ public class AdminHomeScreen extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JLabel Label1 = new JLabel("Admin Home Screen");
+		Label1.setForeground(Color.WHITE);
+		Label1.setFont(new Font("AR DARLING", Font.BOLD, 58));
+		Label1.setHorizontalAlignment(SwingConstants.CENTER);
+		Label1.setBounds(151, 27, 783, 91);
+		getContentPane().add(Label1);
 
 ////////////////////////////////////////////////////////////////////////////////////OUTER LOG OUT BUTTON  /////////////////////////////
 		JButton btnBack = new JButton("Log Out");// main frame button
@@ -94,7 +99,7 @@ public class AdminHomeScreen extends JFrame {
 				dispose();
 			}
 		});
-		btnBack.setBounds(23, 27, 146, 29);
+		btnBack.setBounds(6, 6, 133, 41);
 		contentPane.add(btnBack);
 
 ////////////////////////////////////////////////////////////////////////////////////OUTER ADD MEMBER BUTTON  /////////////////////////////
@@ -104,10 +109,12 @@ public class AdminHomeScreen extends JFrame {
 				initialiseUserLabel(userLabels, "Add Member");
 				textField.setVisible(false);
 				label1.setVisible(false);
+				lblNewLabel.setVisible(true);
+				lblMember.setVisible(true);
 				clearTextFields();	
 			}
 		});
-		btnAddMember.setBounds(23, 195, 146, 29);
+		btnAddMember.setBounds(23, 229, 146, 35);
 		contentPane.add(btnAddMember);
 
 ////////////////////////////////////////////////////////////////////////////////////OUTER EDIT MEMBER BUTTON  /////////////////////////////
@@ -122,7 +129,7 @@ public class AdminHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnEditMember.setBounds(23, 236, 146, 29);
+		btnEditMember.setBounds(23, 276, 146, 35);
 		contentPane.add(btnEditMember);
 
 ////////////////////////////////////////////////////////////////////////////////////OUTER DELETE MEMBER BUTTON  /////////////////////////////
@@ -138,7 +145,7 @@ public class AdminHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnDeleteMember.setBounds(23, 277, 146, 29);
+		btnDeleteMember.setBounds(23, 323, 146, 35);
 		contentPane.add(btnDeleteMember);
 
 ////////////////////////////////////////////////////////////////////////////////////OUTER VIEW ALL MEMBERS BUTTON  /////////////////////////////
@@ -148,7 +155,7 @@ public class AdminHomeScreen extends JFrame {
 				displayAllUsers();
 			}
 		});
-		btnViewAllMembers.setBounds(23, 154, 146, 29);
+		btnViewAllMembers.setBounds(23, 182, 146, 35);
 		contentPane.add(btnViewAllMembers);
 ////////////////////////////////////////////////////////////////////////////////////  INNER FRAME  /////////////////////////////
 		internalFrame = new JInternalFrame();
@@ -162,7 +169,7 @@ public class AdminHomeScreen extends JFrame {
 		internalFrame.setResizable(true);
 		internalFrame.setMaximizable(true);
 		internalFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		internalFrame.setBounds(250, 83, 618, 364);
+		internalFrame.setBounds(244, 144, 618, 364);
 		contentPane.add(internalFrame);
 		internalFrame.getContentPane().setLayout(null);
 ////////////////////////////////////////////////////////////////////////////////////  INNER TEXT FIELDS AND LABELS  /////////////////////////////
@@ -215,7 +222,7 @@ public class AdminHomeScreen extends JFrame {
 		internalFrame.getContentPane().add(label3);
 
 		label4 = new JLabel();
-		label4.setBounds(47, 125, 117, 25);
+		label4.setBounds(37, 125, 127, 25);
 		internalFrame.getContentPane().add(label4);
 
 		label5 = new JLabel();
@@ -223,15 +230,15 @@ public class AdminHomeScreen extends JFrame {
 		internalFrame.getContentPane().add(label5);
 
 		label6 = new JLabel();
-		label6.setBounds(47, 202, 117, 25);
+		label6.setBounds(37, 202, 127, 25);
 		internalFrame.getContentPane().add(label6);
 
 		label7 = new JLabel();
-		label7.setBounds(53, 239, 111, 25);
+		label7.setBounds(37, 239, 127, 25);
 		internalFrame.getContentPane().add(label7);
 
 		label8 = new JLabel();
-		label8.setBounds(47, 280, 117, 23);
+		label8.setBounds(37, 280, 127, 23);
 		internalFrame.getContentPane().add(label8);
 
 		textField_7 = new JTextField();
@@ -246,7 +253,7 @@ public class AdminHomeScreen extends JFrame {
 				clearTextFields();
 			}
 		});
-		btnCancel.setBounds(449, 17, 117, 29);
+		btnCancel.setBounds(449, 239, 117, 29);
 		internalFrame.getContentPane().add(btnCancel);
 		internalFrameButton = new JButton();
 		internalFrameButton.addActionListener(new ActionListener() {
@@ -317,7 +324,7 @@ public class AdminHomeScreen extends JFrame {
 					internalFrame.doDefaultCloseAction();
 			}
 		});
-		internalFrameButton.setBounds(449, 137, 117, 29);
+		internalFrameButton.setBounds(449, 11, 117, 29);
 		internalFrame.getContentPane().add(internalFrameButton);
 ////////////////////////////////////////////////////////////////////////////////////INNER VIEW ALL BOOKS BUTTON  /////////////////////////////
 		btnViewAllBooks = new JButton("View all books");
@@ -326,7 +333,7 @@ public class AdminHomeScreen extends JFrame {
 				displayAllBooks();
 			}
 		});
-		btnViewAllBooks.setBounds(933, 154, 140, 29);
+		btnViewAllBooks.setBounds(922, 185, 140, 35);
 		contentPane.add(btnViewAllBooks);
 ////////////////////////////////////////////////////////////////////////////////////INNER CANCEL BUTTON  /////////////////////////////
 		JButton btnCancel_1 = new JButton("Cancel");
@@ -337,6 +344,16 @@ public class AdminHomeScreen extends JFrame {
 		});
 		btnCancel_1.setBounds(449, 273, 117, 29);
 		internalFrame.getContentPane().add(btnCancel_1);
+		
+		lblNewLabel = new JLabel("1 = Admin");
+		lblNewLabel.setVisible(false);
+		lblNewLabel.setBounds(470, 105, 84, 26);
+		internalFrame.getContentPane().add(lblNewLabel);
+		
+		lblMember = new JLabel("2 = Member");
+		lblMember.setVisible(false);
+		lblMember.setBounds(470, 124, 84, 29);
+		internalFrame.getContentPane().add(lblMember);
 ////////////////////////////////////////////////////////////////////////////////////OUTER ADD BOOK BUTTON  /////////////////////////////
 		JButton btnAddBook = new JButton("Add Book");
 		btnAddBook.addActionListener(new ActionListener() {
@@ -345,7 +362,7 @@ public class AdminHomeScreen extends JFrame {
 				initialiseBookLabel(bookLabels,"Add Book");
 			}
 		});
-		btnAddBook.setBounds(933, 195, 140, 29);
+		btnAddBook.setBounds(922, 229, 140, 35);
 		contentPane.add(btnAddBook);
 /////////////////////////////////////////////////////////////////////////////////////  OUTER EDIT BOOK BUTTON  /////////////////////////////
 		JButton btnEditBook = new JButton("Edit Book");
@@ -363,7 +380,7 @@ public class AdminHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnEditBook.setBounds(933, 236, 140, 29);
+		btnEditBook.setBounds(922, 276, 140, 35);
 		contentPane.add(btnEditBook);
 ////////////////////////////////////////////////////////////////////////////////////OUTER DELETE BOOK BUTTON  /////////////////////////////
 		JButton btnDeleteBook = new JButton("Delete Book");
@@ -381,7 +398,7 @@ public class AdminHomeScreen extends JFrame {
 				}
 			}
 		});
-		btnDeleteBook.setBounds(933, 277, 140, 29);
+		btnDeleteBook.setBounds(922, 323, 140, 35);
 		contentPane.add(btnDeleteBook);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -389,7 +406,7 @@ public class AdminHomeScreen extends JFrame {
 		contentPane.add(scrollPane);
 
 		scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(195, 307, 722, 122);
+		scrollPane_2.setBounds(179, 185, 722, 251);
 		contentPane.add(scrollPane_2);
 
 		table = new JTable();
@@ -415,7 +432,7 @@ public class AdminHomeScreen extends JFrame {
 					}
 			}
 		});
-		btnCheckLateReturns.setBounds(933, 318, 140, 29);
+		btnCheckLateReturns.setBounds(922, 370, 140, 35);
 		contentPane.add(btnCheckLateReturns);
 		
 		label = new JLabel("");
@@ -427,21 +444,23 @@ public class AdminHomeScreen extends JFrame {
 		} else {
 			label.setText("Unknown User");
 		}
-		label.setOpaque(true);
+
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(896, 27, 177, 16);
+		label.setFont(new Font("Calibri", Font.PLAIN, 24));
+		label.setForeground(Color.WHITE);
+		label.setBounds(879, 0, 221, 41);
 		contentPane.add(label);
 		
 		JLabel Label3 = new JLabel("New label");
 		Label3.setIcon(new ImageIcon(Main.class.getResource("/images/Untitled.jpg")));
-		Label3.setBounds(0, 0, 1100, 650);
+		Label3.setBounds(0, -19, 1100, 650);
 		contentPane.add(Label3);
 	}
 
 	/////////////////////////////////////////////////////////////////////////   BOOKS ///////////////////////////////////////////
 	
-	
-	// display all users to j table
+
+	//DISPLAY ALL USERS TO J TABL
 	public void displayBooks(ArrayList<Book> book) {
 		model2.setRowCount(0);
 		rowData = new Object[5];
@@ -455,8 +474,7 @@ public class AdminHomeScreen extends JFrame {
 		}
 	}
 
-
-	//get and validate information for editing and deleting books
+	//GET AND VALIDATE INFORMATION FOR EDITING AND DELETING BOOKS
 	public void getValidInformation(String state, String buttonState) throws SQLException, Exception {
 		internalFrame.setVisible(false);
 		clearTextFields();
@@ -490,7 +508,7 @@ public class AdminHomeScreen extends JFrame {
 			}
 	}
 	
-	//display all books in j table
+	//DISPLAY ALL BOOKS IN J Table
 	public void displayAllBooks() {
 		book = new ArrayList<>();
 		bd = new BookDatabase();
@@ -504,7 +522,7 @@ public class AdminHomeScreen extends JFrame {
 	
 	/////////////////////////////////////////////////////////////////////////   USERS   ///////////////////////////////////////////
 
-	// display arraylist of users in j table
+	//DISPLAY ARRAYLIST OF USERS IN J TABLE 
 		public void displayUsers(ArrayList<User> user) {
 			model.setRowCount(0);
 			table.getColumnModel().getColumn(0).setPreferredWidth(10);
@@ -530,7 +548,7 @@ public class AdminHomeScreen extends JFrame {
 		}
 	
 	
-	// add new member to database
+	// ADD NEW MAMBER TO DATABASE
 		public void addMemberMethod() {
 			String array[] = { textField_1.getText(), textField_2.getText(), textField_3.getText(), textField_4.getText(),
 					textField_5.getText(), textField_6.getText(), textField_7.getText() };
@@ -559,7 +577,7 @@ public class AdminHomeScreen extends JFrame {
 		}
 	
 	
-	// delete member from system
+	// DELETE MEMBER INNER FRAME
 		public void displayMemberInformation(String state, String buttonState) throws SQLException, Exception {
 			displayAllUsers();//display all users in table
 			internalFrame.setVisible(false);
@@ -597,7 +615,7 @@ public class AdminHomeScreen extends JFrame {
 
 		}
 
-		//display all the users
+		//DISPLAY ALL USERS
 	public void displayAllUsers() {
 		user = new ArrayList<>();
 		ud = new UserDatabase();
@@ -610,7 +628,7 @@ public class AdminHomeScreen extends JFrame {
 	}
 
 	/////////////////////////////////////////////////////////////////////////   METHODS ///////////////////////////////////////////
-	//clear all text fields
+	//CLEAR ALL TEXT FIELDS
 	public void clearTextFields() {
 		textField.setText("");
 		textField_1.setText("");
@@ -622,7 +640,7 @@ public class AdminHomeScreen extends JFrame {
 		textField_7.setText("");
 	}
 
-	//initialize labels with user text values
+	//INITIALIZE LABLES FOR MEMBER REQUIREMENTS
 	public void initialiseUserLabel(String[] arr, String s) {
 		label1.setText(arr[0]);
 		label2.setText(arr[1]);
@@ -646,7 +664,7 @@ public class AdminHomeScreen extends JFrame {
 		label8.setVisible(true);
 	}
 
-	//initialize labels with book text values
+	//INITIALIZE LABLES FOR BOOK REQUIREMENTS
 	public void initialiseBookLabel(String[] arr, String s) {
 		label1.setText(arr[0]);
 		label2.setText(arr[1]);
@@ -666,11 +684,13 @@ public class AdminHomeScreen extends JFrame {
 		label1.setVisible(false);
 	}
 	
+	//METHOD TO DISPLAY ERROR MESSAGE
 	public static void errorMessage(String error) {
 		JOptionPane.showConfirmDialog(null, error, "Information", JOptionPane.DEFAULT_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 	}
-	
+
+	//METHOD TO DISPLAY RETURN ERROR MESSAGE
 	public void displayReturn(int b) {
 		switch(b) {
 		case 0:{
